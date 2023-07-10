@@ -21,7 +21,7 @@
 ## Project Plan 
 * Data acquired and join were from Dallasopendata and austin animal center
     * Files were downloaded and converted to dataframes from xls format
-* It contained 197204 rows and 197204 columns 23
+* It contained 197204 rows and 23 columns
 * The data was aquired on **10 JULY 2023**
 * Each row represents a specific animals
 * Each column represents a feature of that animal
