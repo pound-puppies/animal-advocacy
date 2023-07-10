@@ -19,12 +19,12 @@
 
 *****************************************
 ## Project Plan 
-* Data acquired from 
-    * Files were djownuloaded and 
-* It contained ** rows and ** columns**
+* Data acquired and join were from Dallasopendata and austin animal center
+    * Files were downloaded and converted to dataframes from xls format
+* It contained 197204 rows and 197204 columns 23
 * The data was aquired on **10 JULY 2023**
-* Each row represents an animals detection
-* Each column represents a feature of the access event
+* Each row represents a specific animals
+* Each column represents a feature of that animal
 * Prepare data
 
    
@@ -43,16 +43,16 @@
 * 4. 
 
 ## Data Dictionary
-|Feature   |  Description |
-|---|---|
-|Source ID |Person who initiated the intake.|
-|Animal ID |Unique number assigned to each animal when their record is created in the database |
-|Animal Type  | Animal category: dog, cat, wildlife, other, etc.  |
+|Feature   |Datatype| Unit       |Description   |
+|----------|--------|------------|--------------|
+|Source ID | String |Alphanumeric |Person who initiated the intake.|
+|Animal ID | String |Alphanumeric | Unique number assigned to each animal when their record is created in the database |
+|Animal Type| String| Alphanumeric|Animal category: dog, cat, wildlife, other, etc.  |
 |Activity Number|Unique number assigned to an activity related to a service request.|
 |Activity Sequence|Sequence starts with 1 usually then a follow up sequence is created until activity is completed.|
-|Census Tract|Government census tract in which the action was located.|
+|Census Tract| | |Government census tract in which the action was located.|
 |Council District|City of Dallas Council District in which the action was located.|
-|DateTime| Date and time of action  |
+|DateTime| | | | |Date and time of action  |
 |MonthYear|Month and year of aciton|
 |Kennel Number|Location of the animal at the time of the report|
 |Kennel Status|Availability of the animal.|
