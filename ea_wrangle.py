@@ -78,6 +78,14 @@ def get_prep_aa(df):
     df['outcome_datetime'] = pd.to_datetime(df['outcome_datetime'])
     df['intake_datetime'] = pd.to_datetime(df['intake_datetime'])
     df['dob'] = pd.to_datetime(df['dob'], format='%m/%d/%Y')
+    df['intake_date'] = df['intake_datetime'].dt.date
+    df['outcome_date'] = df['outcome_datetime'].dt.date
+    df['outcome_date'] = pd.to_datetime(df['outcome_date'])
+    df['intake_date'] = pd.to_datetime(df['intake_date'])
+    df['intake_age'] = df['intake_date'] - df['dob']
+    df['outcome_age'] = df['outcome_date'] - df['dob']
+    df['intake_age'] = df['intake_age'] / 30
+    df['outcome_age'] = df['outcome_age'] / 30
     
     #filtered for cats and dogs
     df = df[df['species'].isin(['Cat', 'Dog'])]
