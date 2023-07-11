@@ -15,20 +15,6 @@ np.random.seed(42)
 
                                                         ############### Acquire Functions ###########################
 
-def get_aa_data(fn, query, url):
-    """
-    check if file exists in my local directory, if not, pull from sql db
-    return dataframe
-    """
-    if os.path.isfile(fn):
-        print('csv file found and loaded')
-        return pd.read_csv(fn, index_col=0)
-    else:
-        print('creating df and exporting csv')
-        df = pd.read_sql(query, url)
-        df.to_csv(fn)
-        return df
-    
 def left_join_csv(outcomes_file, intakes_file, merged_file):
     # Read the CSV files
     outcomes = pd.read_csv(outcomes_file)
@@ -47,6 +33,7 @@ def left_join_csv(outcomes_file, intakes_file, merged_file):
 def get_prep_aa(df):
     # made all column names lower case
     df.columns = df.columns.str.lower()
+    df = df.apply(lambda x: x.astype(str).str.lower())
     # changed column names to make them more readable
     new_columns = {
         'datetime_x': 'outcome_datetime',
@@ -65,13 +52,17 @@ def get_prep_aa(df):
         'age upon outcome': 'outcome_age',
         'date of birth': 'dob',
         'intake condition': 'intake_condition',
-        'found location': 'found_location'
+        'found location': 'found_location',
+        'animal id': 'id'      
     }
     df = df.rename(columns=new_columns)
     
     #dropped unnecessary column names, outcome subtype, due to having over 119k of 193k rows empty, intake_monthyear, outcome_month_year, animal type_x, are predominantly the same, 
     columns_to_drop = ['outcome subtype', 'name_x', 'breed_x', 'animal type_x', 'color_x', 'intake_monthyear', 'outcome_monthyear']
     df = df.drop(columns=columns_to_drop)
+    
+    df.dropna(subset=['intake_sex'], inplace=True)
+    df.dropna(subset=['outcome'], inplace=True)
     
     #converted dates to proper format, and calculated age
     df['outcome_datetime'] = pd.to_datetime(df['outcome_datetime'])
@@ -87,11 +78,16 @@ def get_prep_aa(df):
     df['outcome_age'] = df['outcome_age'] / 30
     
     #filtered for cats and dogs
-    df = df[df['species'].isin(['Cat', 'Dog'])]
-    
+    df = df[df['species'].isin(['cat', 'dog'])]
+    df = df[df['outcome'].isin(['adoption', 'transfer', 'rto-adopt', 'return to owner', 'euthanasia'])]
+    df = df[df['intake_type'].isin(['stray', 'owner surrender', 'public assist', 'abandoned'])]
+                                
     #changed the order of the columns for readability
-    desired_order = ['animal id', 'name', 'outcome', 'dob', 'intake_type', 'intake_datetime', 'outcome_datetime', 'intake_condition', 
+    desired_order = ['name', 'outcome', 'dob', 'intake_type', 'intake_datetime', 'outcome_datetime', 'intake_condition', 
                  'intake_age', 'outcome_age', 'species', 'found_location', 'intake_sex', 'breed', 'color']
     df = df.reindex(columns=desired_order)
+    
+    df['intake_age'] = df['intake_age'].dt.days
+    df['outcome_age'] = df['outcome_age'].dt.days
 
     return df

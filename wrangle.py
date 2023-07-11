@@ -34,6 +34,7 @@ def left_join_csv(outcomes_file, intakes_file, merged_file):
 def get_prep_aa(df):
     # made all column names lower case
     df.columns = df.columns.str.lower()
+    df.apply(lambda x: x.astype(str).str.lower())
     # changed column names to make them more readable
     new_columns = {
         'datetime_x': 'outcome_datetime',
@@ -52,7 +53,8 @@ def get_prep_aa(df):
         'age upon outcome': 'outcome_age',
         'date of birth': 'dob',
         'intake condition': 'intake_condition',
-        'found location': 'found_location'
+        'found location': 'found_location',
+        'Animal ID': 'id'
     }
     df = df.rename(columns=new_columns)
     
