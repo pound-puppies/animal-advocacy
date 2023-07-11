@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import os
-
+from sklearn.model_selection import train_test_split
 from sqlalchemy import text, create_engine
 
 import warnings
@@ -193,3 +193,19 @@ def transform_color(df):
     df = df.drop(columns=["color"])
 
     return df
+
+
+def split_data(df, target_variable):
+    '''
+    Takes in two arguments the dataframe name and the ("target_variable" - must be in string format) to stratify  and 
+    return train, validate, test subset dataframes will output train, validate, and test in that order.
+    '''
+    train, test = train_test_split(df, #first split
+                                   test_size=.2, 
+                                   random_state=123, 
+                                   stratify= df[target_variable])
+    train, validate = train_test_split(train, #second split
+                                    test_size=.25, 
+                                    random_state=123, 
+                                    stratify=train[target_variable])
+    return train, validate, test
