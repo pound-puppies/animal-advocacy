@@ -29,6 +29,87 @@ def left_join_csv(outcomes_file, intakes_file, merged_file):
     return merged_data
 
                                                         #################### Prepare Functions ##########################
+    
+def transform_intake_condition(df):
+    """
+    Transforms the intake_condition column of a DataFrame by performing several operations.
+
+    Args:
+        df (pandas.DataFrame): The input DataFrame containing an 'intake_condition' column.
+
+    Returns:
+        pandas.DataFrame: The transformed DataFrame.
+
+    """
+
+    df = df.apply(lambda x: x.astype(str).str.lower())
+
+    # Change 'Feral', 'Neurologic', 'Behavior', 'Space' to 'mental' category
+    df['intake_condition'] = df['intake_condition'].replace(['feral', 'neurologic', 'behavior', 'space'], 'mental')
+
+    # Set values indicating medical attention
+    df['intake_condition'] = df['intake_condition'].replace(['nursing', 'neonatal', 'medical', 'pregnant', 'med attn', 
+                                                            'med urgent', 'parvo', 'agonal', 'panleuk'], 'medical attention')
+
+    # Drop rows with 'other', 'unknown', and 'nan' values
+    df = df[df['intake_condition'].isin(['other', 'unknown', 'nan']) == False]
+
+    return df
+
+def transform_color(df):
+    """
+    Transforms the color column of a DataFrame by performing several operations.
+
+    Args:
+        df (pandas.DataFrame): The input DataFrame containing a 'color' column.
+
+    Returns:
+        pandas.DataFrame: The transformed DataFrame with additional columns.
+
+    """
+
+    # lowercase everything
+    df = df.apply(lambda x: x.astype(str).str.lower())
+
+    # Add spaces between color names separated by slashes
+    df['color'] = df['color'].str.replace('/', ' / ')
+
+    # Replace color names with their corresponding standard names
+    replacements = {
+        'chocolate': 'brown',
+        'liver': 'brown',
+        'ruddy': 'brown',
+        'apricot': 'orange',
+        'pink': 'red',
+        'cream': 'white',
+        'flame point': 'white',
+        'blue': 'gray',
+        'silver': 'gray',
+        'yellow': 'gold',
+        'torbie': 'tricolor',
+        'tortie': 'tricolor',
+        'calico': 'tricolor'
+    }
+    df['color'] = df['color'].replace(replacements, regex=True)
+
+    # Create new column 'primary_color' with the first color
+    colors = ['black', 'brown', 'white', 'tan', 'brindle', 'gray', 'fawn', 'red', 'sable', 'buff', 'orange', 'blue',
+              'tricolor', 'gold', 'cream', 'lynx point', 'seal point', 'agouti', 'lilac point']
+    for color in colors:
+        df.loc[df['color'].str.startswith(color), 'primary_color'] = color
+
+    # Drop rows with 'unknown' color
+    df = df[df['color'] != 'unknown']
+
+    # Create column indicating if the animal has a tabby pattern
+    df['is_tabby'] = df['color'].str.contains('tabby').astype(int)
+
+    # Create column indicating if the animal has mixed colors
+    df["mix_color"] = np.where(df['color'].str.contains(r'\/|tricolor|torbie|tortie'), 1, 0)
+
+    df = df.drop(columns=["color"])
+
+    return df
 
 def get_prep_aa(df):
     # made all column names lower case
@@ -93,7 +174,7 @@ def get_prep_aa(df):
     df = df[df['intake_type'].isin(['stray', 'owner surrender', 'public assist', 'abandoned'])]
     
     #created columns for breeds*****************************************************************
-    df['mix_dummy'] = np.where(df['breed'].str.contains('mix', case=False, na=False), 1, 0)
+    df['mixed'] = np.where(df['breed'].str.contains('mix', case=False, na=False), 1, 0)
     df['two_breeds'] = np.where(df['breed'].str.contains('/', case=False, na=False), 1, 0)
     df['pure_bred'] = np.where(df['breed'].isin(['/', 'mix']), 1, 0)
     
@@ -106,5 +187,8 @@ def get_prep_aa(df):
     
     df['intake_age'] = df['intake_age'].dt.days
     df['outcome_age'] = df['outcome_age'].dt.days
+    
+    df = transform_intake_condition(df)
+    df = transform_color(df)
 
     return df
