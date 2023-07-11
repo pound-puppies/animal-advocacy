@@ -182,7 +182,7 @@ def get_prep_aa(df):
                                 
     #changed the order of the columns for readability
     desired_order = ['name', 'outcome', 'dob', 'intake_type', 'intake_datetime', 'outcome_datetime', 'intake_condition', 
-                 'intake_age', 'outcome_age', 'species', 'intake_sex', 'breed', 'color']
+                 'intake_age', 'outcome_age', 'species', 'intake_sex', 'breed', 'mixed', 'two_breeds', 'pure_breeds', 'color']
     df = df.reindex(columns=desired_order)
     
     df['intake_age'] = df['intake_age'].dt.days
