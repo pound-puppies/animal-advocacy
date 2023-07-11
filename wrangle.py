@@ -140,7 +140,7 @@ def get_prep_aa(df):
     df = df.rename(columns=new_columns)
     
     #dropped unnecessary column names, outcome subtype, due to having over 119k of 193k rows empty, intake_monthyear, outcome_month_year, animal type_x, are predominantly the same, 
-    columns_to_drop = ['outcome subtype', 'name_x', 'breed_x', 'animal type_x', 'color_x', 'intake_monthyear', 'outcome_monthyear']
+    columns_to_drop = ['outcome subtype', 'name_x', 'breed_x', 'animal type_x', 'color_x', 'intake_monthyear', 'outcome_monthyear', 'found_location']
     df = df.drop(columns=columns_to_drop)
     
     df.dropna(subset=['intake_sex'], inplace=True)
@@ -171,7 +171,7 @@ def get_prep_aa(df):
                                 
     #changed the order of the columns for readability
     desired_order = ['name', 'outcome', 'dob', 'intake_type', 'intake_datetime', 'outcome_datetime', 'intake_condition', 
-                 'intake_age', 'outcome_age', 'species', 'found_location', 'intake_sex', 'breed', 'color']
+                 'intake_age', 'outcome_age', 'species', 'intake_sex', 'breed', 'mixed', 'two_breeds', 'pure_breeds', 'color']
     df = df.reindex(columns=desired_order)
     
     df['intake_age'] = df['intake_age'].dt.days
