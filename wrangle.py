@@ -82,6 +82,11 @@ def get_prep_aa(df):
     df = df[df['species'].isin(['cat', 'dog'])]
     df = df[df['outcome'].isin(['adoption', 'transfer', 'rto-adopt', 'return to owner', 'euthanasia'])]
     df = df[df['intake_type'].isin(['stray', 'owner surrender', 'public assist', 'abandoned'])]
+    
+    #
+    df['mix_dummy'] = np.where(df['breed'].str.contains('mix', case=False, na=False), 1, 0)
+    df['two_breeds'] = np.where(df['breed'].str.contains('/', case=False, na=False), 1, 0)
+    df['pure_bred'] = np.where(df['breed'].isin(['/', 'mix']), 1, 0)
                                 
     #changed the order of the columns for readability
     desired_order = ['name', 'outcome', 'dob', 'intake_type', 'intake_datetime', 'outcome_datetime', 'intake_condition', 

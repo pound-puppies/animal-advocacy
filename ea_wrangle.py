@@ -58,22 +58,32 @@ def get_prep_aa(df):
     df = df.rename(columns=new_columns)
     
     #dropped unnecessary column names, outcome subtype, due to having over 119k of 193k rows empty, intake_monthyear, outcome_month_year, animal type_x, are predominantly the same, 
-    columns_to_drop = ['outcome subtype', 'name_x', 'breed_x', 'animal type_x', 'color_x', 'intake_monthyear', 'outcome_monthyear']
+    columns_to_drop = ['outcome subtype', 'name_x', 'breed_x', 'animal type_x', 'color_x', 'intake_monthyear', 'outcome_monthyear', 'found_location']
     df = df.drop(columns=columns_to_drop)
     
     df.dropna(subset=['intake_sex'], inplace=True)
     df.dropna(subset=['outcome'], inplace=True)
     
-    #converted dates to proper format, and calculated age
+    #converted date to dates
     df['outcome_datetime'] = pd.to_datetime(df['outcome_datetime'])
     df['intake_datetime'] = pd.to_datetime(df['intake_datetime'])
     df['dob'] = pd.to_datetime(df['dob'], format='%m/%d/%Y')
+    
+    #pulled dates from intake and outcome date**************************
     df['intake_date'] = df['intake_datetime'].dt.date
     df['outcome_date'] = df['outcome_datetime'].dt.date
+    
+    #converted pulled dates to datetimes
     df['outcome_date'] = pd.to_datetime(df['outcome_date'])
     df['intake_date'] = pd.to_datetime(df['intake_date'])
+    
+    #calculated age at intake
     df['intake_age'] = df['intake_date'] - df['dob']
+    
+    #calculated age at outcome
     df['outcome_age'] = df['outcome_date'] - df['dob']
+    
+    
     df['intake_age'] = df['intake_age'] / 30
     df['outcome_age'] = df['outcome_age'] / 30
     
@@ -81,10 +91,17 @@ def get_prep_aa(df):
     df = df[df['species'].isin(['cat', 'dog'])]
     df = df[df['outcome'].isin(['adoption', 'transfer', 'rto-adopt', 'return to owner', 'euthanasia'])]
     df = df[df['intake_type'].isin(['stray', 'owner surrender', 'public assist', 'abandoned'])]
+    
+    #created columns for breeds*****************************************************************
+    df['mix_dummy'] = np.where(df['breed'].str.contains('mix', case=False, na=False), 1, 0)
+    df['two_breeds'] = np.where(df['breed'].str.contains('/', case=False, na=False), 1, 0)
+    df['pure_bred'] = np.where(df['breed'].isin(['/', 'mix']), 1, 0)
+    
+    
                                 
     #changed the order of the columns for readability
     desired_order = ['name', 'outcome', 'dob', 'intake_type', 'intake_datetime', 'outcome_datetime', 'intake_condition', 
-                 'intake_age', 'outcome_age', 'species', 'found_location', 'intake_sex', 'breed', 'color']
+                 'intake_age', 'outcome_age', 'species', 'intake_sex', 'breed', 'color']
     df = df.reindex(columns=desired_order)
     
     df['intake_age'] = df['intake_age'].dt.days
