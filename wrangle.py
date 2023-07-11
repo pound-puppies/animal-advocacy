@@ -176,5 +176,8 @@ def get_prep_aa(df):
     
     df['intake_age'] = df['intake_age'].dt.days
     df['outcome_age'] = df['outcome_age'].dt.days
+    
+    df = transform_color(df)
+    df = transform_intake_condition(df)
 
     return df
