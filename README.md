@@ -1,21 +1,25 @@
 # Animal-Advocacy-Project
-### Brian Oneill, Scott Barnett, Keila Camarillo, and Esayas Asefa
+### Brian O'Neil, Scott Barnett, Keila Camarillo, and Esayas Asefa
 ### 10 July 2023
 ## Project description with goals
 ### Description
-* As part of the mayor's campaign 
+* Using the Austin Animal Center data from 2013 to present, our team will create a model to best predict whether an cat or dog will be adopted. The purpose is to give stakeholders (taxpayers, local government) can use the model as a tool to decide where to focus resources to increase adoption rates. The key is early intervention for cats/dogs to increase adoption resources on those with lower rates of adoption. 
 
 ### Goals¶
 * Construct an email answering at least 4 questions 
-* Deliver a final report to the data science team 
+* Deliver a final report with predictive model to the data science team 
 * Deliver a slide with key points
+* Deliver a predictive model any animal shelter can adopt
+
+### Initial Thoughts
+* We believe there are key features we possess in the data set such as breed, age, and others that will make a strong predictive model.
 
 ## Initial hypotheses and/or questions you have of the data, ideas
 
-* 1. ?
-* 2. ?
-* 3. ?
-* 4. ?
+* 1. Does breed affect whether an animal will be adopted?
+* 2. Does age affect whether an animal will be adopted?
+* 3. Does tenure affect whether an animal will be adopted?
+* 4. Does condition affect whether an animal will be adopted?
 
 *****************************************
 ## Project Plan 
@@ -85,9 +89,9 @@
 |Color |The color of the animal|
 
 ## Steps to Reproduce
-* 1. 
-* 2. Clone this repo.
-* 3. 
+* 1. Clone this repo: git@github.com:pound-puppies/animal-advocacy.git
+* 2. Go to team [Google Drive link here:](https://drive.google.com/drive/folders/1hV0WQezLiQpS06MIc0Kggy8Iq0mdoTLh) 
+* 3. Download austin_animal_intakes.csv and austin_animal_outcomes.csv and put in cloned personal repository
 * 4. Run notebook.
 
 ## Takeaways and Conclusions
