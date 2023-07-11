@@ -33,14 +33,15 @@ def get_aa_data(fn, query, url):
                                                         #################### Prepare Functions ##########################
 
 def get_prep_aa(df):
+    # made all column names lower case
     df.columns = df.columns.str.lower()
-
+    # changed column names to make them more readable
     new_columns = {
         'datetime_x': 'outcome_datetime',
         'datetime_y': 'intake_datetime',
         'monthyear_x': 'outcome_monthyear',
         'monthyear_y': 'intake_monthyear',
-        'name_x': 'name',
+        'name_y': 'name',
         'breed_y': 'breed',
         'animal type_y': 'species',
         'outcome type': 'outcome',
@@ -55,13 +56,23 @@ def get_prep_aa(df):
         'found location': 'found_location'
     }
     df = df.rename(columns=new_columns)
-
-    columns_to_drop = ['outcome subtype', 'name_y', 'breed_x', 'animal type_x', 'color_x']
+    
+    #dropped unnecessary column names, outcome subtype, due to having over 119k of 193k rows empty, intake_monthyear, outcome_month_year, animal type_x, are predominantly the same, 
+    columns_to_drop = ['outcome subtype', 'name_x', 'breed_x', 'animal type_x', 'color_x', 'intake_monthyear', 'outcome_monthyear']
     df = df.drop(columns=columns_to_drop)
-
+    
+    #converted dates to proper format
     df['outcome_datetime'] = pd.to_datetime(df['outcome_datetime'])
     df['intake_datetime'] = pd.to_datetime(df['intake_datetime'])
-
+    df['dob'] = pd.to_datetime(df['dob'], format='%m/%d/%Y')
+    
+    #filtered for cats and dogs
     df = df[df['species'].isin(['Cat', 'Dog'])]
+    
+    #changed the order of the columns for readability
+    desired_order = ['animal id', 'name', 'outcome', 'dob', 'intake_type', 'intake_datetime', 'outcome_datetime', 'intake_condition', 
+                 'intake_age', 'outcome_age', 'species', 'found_location', 'intake_sex', 'breed', 'color']
+    df = df.reindex(columns=desired_order)
 
     return df
+
