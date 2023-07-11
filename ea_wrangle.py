@@ -2,7 +2,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-# import env
 import os
 
 from sqlalchemy import text, create_engine
@@ -74,7 +73,7 @@ def get_prep_aa(df):
     columns_to_drop = ['outcome subtype', 'name_x', 'breed_x', 'animal type_x', 'color_x', 'intake_monthyear', 'outcome_monthyear']
     df = df.drop(columns=columns_to_drop)
     
-    #converted dates to proper format
+    #converted dates to proper format, and calculated age
     df['outcome_datetime'] = pd.to_datetime(df['outcome_datetime'])
     df['intake_datetime'] = pd.to_datetime(df['intake_datetime'])
     df['dob'] = pd.to_datetime(df['dob'], format='%m/%d/%Y')
