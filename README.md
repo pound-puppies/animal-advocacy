@@ -18,8 +18,8 @@
 
 * 1. Does breed affect whether an animal will be adopted?
 * 2. Does age affect whether an animal will be adopted?
-* 3. Does tenure affect whether an animal will be adopted?
-* 4. Does condition affect whether an animal will be adopted?
+* 3. Does condition affect whether an animal will be adopted?
+* 4. 
 
 *****************************************
 ## Project Plan 
@@ -107,6 +107,14 @@
 
 # Recommendations
 * Provide additional takeaways or downloadable docs for extensively used topics
+* We have data governance recommendations:
+    - We found tens of thousands of rows with data that was missing and/or had nonsensical information
+    * Collect information more information such as: 
+        - Incidents (e.g. biting, abuse hx) 
+        - Stated reason for return 
+        - Reasons for turn in by owners
+        - Vaccination status
+        - Who turned the animal in (e.g. citizen, law enforcement, organization)
 
 # Next Steps
-* 
+
