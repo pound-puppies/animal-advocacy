@@ -13,9 +13,9 @@ np.random.seed(42)
 
 ####################### Imports ############################
 
+
                                                         ############### Acquire Functions ###########################
 
-    
 def left_join_csv(outcomes_file, intakes_file, merged_file):
     # Read the CSV files
     outcomes = pd.read_csv(outcomes_file)
@@ -30,6 +30,7 @@ def left_join_csv(outcomes_file, intakes_file, merged_file):
     return merged_data
 
                                                         #################### Prepare Functions ##########################
+    
 def transform_intake_condition(df):
     """
     Transforms the intake_condition column of a DataFrame by performing several operations.
@@ -193,4 +194,3 @@ def get_prep_aa(df):
     return df, model_df
 
     return df
-
