@@ -199,7 +199,7 @@ def get_prep_aa(df):
     keep_col= ['has_name', 'outcome', 'dob', 'age_category',
                'species', 'intake_type', 'intake_condition',
                'intake_date', 'outcome_date', 'intake_age',
-               'outcome_age', 'tenure_days', 'intake_sex',
+               'outcome_age', 'intake_sex',
                'breed', 'mix_breeds', 'two_breeds', 'pure_breed',
                'primary_color', 'is_tabby', 'mix_color']
     df = df[keep_col]
