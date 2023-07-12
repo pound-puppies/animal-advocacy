@@ -5,6 +5,7 @@ import numpy as np
 import os
 from sklearn.model_selection import train_test_split
 from sqlalchemy import text, create_engine
+import scipy.stats as stats
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -158,6 +159,8 @@ def get_prep_aa(df):
     df["tenure_days"] = (df['outcome_age'] - df['intake_age'] )
     # filter weird dates
     df = df[df.tenure_days > 0]
+    
+    df['tenure_days'] = df.tenure_days.astype(float)
 
     # color and intake condition columns
     df = transform_color(df)
