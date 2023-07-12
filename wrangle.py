@@ -194,7 +194,7 @@ def get_prep_aa(df):
     df['age_category'] = pd.np.select(conditions, values, default='unknown')
     
     # keep these columns
-    keep_col= ['has_name', 'outcome', 'dob', 'outcome_age',
+    keep_col= ['has_name', 'outcome', 'dob', 'age_category',
                'species', 'intake_type', 'intake_condition',
                'intake_date', 'outcome_date', 'intake_age',
                'outcome_age', 'tenure_days', 'intake_sex',
