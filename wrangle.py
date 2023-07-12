@@ -192,6 +192,7 @@ def get_prep_aa(df):
     values = ['puppy', 'adult', 'senior']
     # Create the 'age_category' column based on the conditions and values
     df['age_category'] = pd.np.select(conditions, values, default='unknown')
+    
     # keep these columns
     keep_col= ['has_name', 'outcome', 'dob', 'outcome_age',
                'species', 'intake_type', 'intake_condition',
@@ -202,7 +203,7 @@ def get_prep_aa(df):
     df = df[keep_col]
     
     dummies_df = pd.get_dummies(df, columns=['outcome', 'species', 'intake_type',
-                                             'intake_condition', 'intake_sex', 'primary_color', 'outcome_age'], drop_first = True)
+                                             'intake_condition', 'intake_sex', 'primary_color', 'age_category'], drop_first = True)
     model_df = dummies_df.drop(columns=['dob', 'intake_date', 'outcome_date', 'breed'])
     return df, model_df
 
