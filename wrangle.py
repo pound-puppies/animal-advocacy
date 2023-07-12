@@ -160,8 +160,7 @@ def get_prep_aa(df):
     # filter weird dates
     df = df[df.tenure_days > 0]
     
-    df['tenure_days'] = df.tenure_days.astype(float)
-
+    
     # color and intake condition columns
     df = transform_color(df)
     df = transform_intake_condition(df)
@@ -174,7 +173,7 @@ def get_prep_aa(df):
     # mix breeds columns
     df['mix_breeds'] = np.where(df['breed'].str.contains('mix', case=False, na=False), 1, 0)
     df['two_breeds'] = np.where(df['breed'].str.contains('/', case=False, na=False), 1, 0)
-    df['pure_breed'] = np.where(df['breed'].isin(['/', 'mix']), 1, 0)
+    df['pure_breed'] = np.where((df['mix_breeds'] == 0) & (df['two_breeds'] == 0), 1, 0)
 
     # if pet has a name 1, if not 0 place in column has_name
     df['has_name'] = np.where(df['name'] != 'nan', 1, 0)
@@ -205,8 +204,11 @@ def get_prep_aa(df):
                'primary_color', 'is_tabby', 'mix_color']
     df = df[keep_col]
     
+    df['tenure_days'] = df['tenure_days'].astype(float)
+    df['tenure_days'] = df['tenure_days'].astype(int)
+    
     dummies_df = pd.get_dummies(df, columns=['outcome', 'species', 'intake_type',
-                                             'intake_condition', 'intake_sex', 'primary_color', 'age_category'], drop_first = True)
+                                             'intake_condition', 'intake_sex', 'primary_color', 'age_category'])
     model_df = dummies_df.drop(columns=['dob', 'intake_date', 'outcome_date', 'breed'])
     return df, model_df
 
