@@ -92,7 +92,7 @@ def get_prep_aa(df):
 
     return df
 
-                                                        #################### Prepare Functions ##########################
+                                #################### Prepare Functions ##########################
 
 def transform_intake_condition(df):
     """
