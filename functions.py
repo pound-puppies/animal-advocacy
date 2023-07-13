@@ -119,6 +119,35 @@ def get_xy():
     y_test = test.outcome
     return X_train,y_train,X_validate,y_validate,X_test,y_test
 
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, recall_score, precision_score
+import pandas as pd
+
+
+def create_models(seed=123):
+    '''
+    Create a list of machine learning models.
+            Parameters:
+                    seed (integer): random seed of the models
+            Returns:
+                    models (list): list containing the models
+    This includes best fit hyperparamaenters                
+    '''
+    models = []
+    models.append(('k_nearest_neighbors', KNeighborsClassifier(n_neighbors=100)))
+    models.append(('logistic_regression', LogisticRegression(random_state=seed)))
+    models.append(('DecisionTreeClassifier', DecisionTreeClassifier(max_depth=3,min_samples_split=4,random_state=seed)))
+    models.append(('random_forest', RandomForestClassifier(max_depth=3,random_state=seed)))
+    models.append(('support_vector_machine', SVC(random_state=seed)))
+    models.append(('naive_bayes', GaussianNB()))
+    models.append(('gradient_boosting', GradientBoostingClassifier(random_state=seed)))
+    return models
+
 
 def get_models():
     # create models list
