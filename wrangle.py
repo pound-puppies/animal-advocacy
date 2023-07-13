@@ -193,25 +193,6 @@ def prep_df(df):
     ]
     # Define the corresponding values for each age category
     values = ['puppy', 'adult', 'senior']
-<<<<<<< HEAD
-    # Create the 'age_category' column based on the conditions and values
-    df['age_category'] = pd.np.select(conditions, values, default='unknown')
-    
-    # keep these columns
-    keep_col= ['has_name', 'outcome', 'dob', 'age_category',
-               'species', 'intake_type', 'intake_condition',
-               'intake_date', 'outcome_date', 'intake_age',
-               'outcome_age', 'intake_sex',
-               'breed', 'mix_breeds', 'two_breeds', 'pure_breed',
-               'primary_color', 'is_tabby', 'mix_color']
-    df = df[keep_col]
-    
-    dummies_df = pd.get_dummies(df, columns=['outcome', 'species', 'intake_type',
-                                             'intake_condition', 'intake_sex', 'primary_color', 'age_category'])
-    model_df = dummies_df.drop(columns=['dob', 'intake_date', 'outcome_date', 'breed'])
-    return df, model_df
-=======
->>>>>>> 671eae483c00eb80073d56dd9e01ba26f1c96c9d
 
     # lower cases df
     df.columns = df.columns.str.lower()
