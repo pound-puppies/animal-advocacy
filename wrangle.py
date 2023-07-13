@@ -204,9 +204,6 @@ def get_prep_aa(df):
                'primary_color', 'is_tabby', 'mix_color']
     df = df[keep_col]
     
-    df['tenure_days'] = df['tenure_days'].astype(float)
-    df['tenure_days'] = df['tenure_days'].astype(int)
-    
     dummies_df = pd.get_dummies(df, columns=['outcome', 'species', 'intake_type',
                                              'intake_condition', 'intake_sex', 'primary_color', 'age_category'])
     model_df = dummies_df.drop(columns=['dob', 'intake_date', 'outcome_date', 'breed'])
