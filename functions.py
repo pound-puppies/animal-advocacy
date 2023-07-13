@@ -30,7 +30,13 @@ import scipy.stats as stats
 
 
                                                             ##################### Functions for Exploration #########
-
+def age_cat_plots(model_df):
+    sns.barplot(x = model_df.age_category_puppy, y = model_df.outcome_adoption, data=df)
+    # Add labels and title
+    plt.ylabel('age_category_puppy')
+    plt.title('adoption')
+    # Show the plot
+    plt.show()
     
     
 
@@ -71,3 +77,86 @@ P-value: {p}""")
 
 
                                                             ###################### Modeling Functions ##################
+        
+        
+        
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import precision_score
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.neighbors import KNeighborsClassifier
+
+def get_baseline(y_train):
+    '''
+    this function returns a baseline for accuracy
+    '''
+    baseline_prediction = y_train.mode()
+    # Predict the majority class in the training set
+    baseline_pred = [baseline_prediction] * len(y_train)
+    accuracy = accuracy_score(y_train, baseline_pred)
+    baseline_results = {'Baseline': [baseline_prediction],'Metric': ['Accuracy'], 'Score': [accuracy]}
+    baseline_df = pd.DataFrame(data=baseline_results)
+    return baseline_df 
+
+#creating X,y
+def get_xy():
+    '''
+    This function generates X and y for train, validate, and test to use : X_train, y_train, X_validate, y_validate, X_test, y_test = get_xy()
+
+    '''
+    # Acquiring data
+    df = w.left_join_csv('austin_animal_outcomes.csv', 'austin_animal_intakes.csv', 'merged_data.csv')
+    # Running preperation 
+    df, model_df = w.prep_df(df)
+    # Split
+    train, validate, test = w.split_data(model_df,'outcome')
+    # create X & y version of train, where y is a series with just the target variable and X are all the features.    
+    X_train = train.drop(['outcome'], axis=1)
+    y_train = train.outcome
+    X_validate = validate.drop(['outcome'], axis=1)
+    y_validate = validate.outcome
+    X_test = test.drop(['outcome'], axis=1)
+    y_test = test.outcome
+    return X_train,y_train,X_validate,y_validate,X_test,y_test
+
+
+def get_models():
+    # create models list
+    models = create_models(seed=123)
+    X_train, y_train, X_validate, y_validate, X_test, y_test = get_xy()
+    # initialize results dataframe
+    results = pd.DataFrame(columns=['model', 'set', 'accuracy', 'recall'])
+    
+    # loop through models and fit/predict on train and validate sets
+    for name, model in models:
+        # fit the model with the training data
+        model.fit(X_train, y_train)
+        
+        # make predictions with the training data
+        train_predictions = model.predict(X_train)
+        
+        # calculate training accuracy, recall, and precision
+        train_accuracy = accuracy_score(y_train, train_predictions)
+        train_recall = recall_score(y_train, train_predictions, average='weighted')
+        train_precision = precision_score(y_train, train_predictions, average='weighted')
+        
+        # make predictions with the validation data
+        val_predictions = model.predict(X_validate)
+        
+        # calculate validation accuracy, recall, and precision
+        val_accuracy = accuracy_score(y_validate, val_predictions)
+        val_recall = recall_score(y_validate, val_predictions, average='weighted')
+        val_precision = precision_score(y_validate, val_predictions, average='weighted')
+
+        
+        # append results to dataframe
+        results = results.append({'model': name, 'set': 'train', 'accuracy': train_accuracy, 'recall': train_recall, 'precision' : train_precision},ignore_index=True)
+        results = results.append({'model': name, 'set': 'validate', 'accuracy': val_accuracy, 'recall': val_recall, 'precision' : val_precision}, ignore_index=True)
+  
+
+        '''
+        this section left in case I want to return to printed format rather than data frame
+        # print classifier accuracy and recall
+        print('Classifier: {}, Train Accuracy: {}, Train Recall: {}, Validation Accuracy: {}, Validation Recall: {}'.format(name, train_accuracy, train_recall, val_accuracy, val_recall))
+        '''
+    return results
