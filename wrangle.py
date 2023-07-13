@@ -47,17 +47,17 @@ def transform_intake_condition(df):
     df = df.apply(lambda x: x.astype(str).str.lower())
 
     # Change 'Feral', 'Neurologic', 'Behavior', 'Space' to 'mental' category
-    df['intake_condition'] = df['intake_condition'].replace(['feral', 'neurologic', 'behavior', 'space'], 'mental')
+    df['condition'] = df['condition'].replace(['feral', 'neurologic', 'behavior', 'space'], 'mental')
 
     # Set values indicating medical attention
-    df['intake_condition'] = df['intake_condition'].replace(['nursing', 'neonatal', 'medical', 'pregnant', 'med attn', 
+    df['condition'] = df['condition'].replace(['nursing', 'neonatal', 'medical', 'pregnant', 'med attn', 
                                                             'med urgent', 'parvo', 'agonal', 'panleuk'], 'medical attention')
 
     # Drop rows with 'other', 'unknown', and 'nan' values
-    df = df[df['intake_condition'].isin(['other', 'unknown', 'nan']) == False]
+    df = df[df['condition'].isin(['other', 'unknown', 'nan']) == False]
 
     return df
-
+    
 def transform_color(df):
     """
     Transforms the color column of a DataFrame by performing several operations.
@@ -113,77 +113,78 @@ def transform_color(df):
 
     return df
 
-def get_prep_aa(df):
-    # made all column names lower case
+def prep_df(df):
+# lower cases df
     df.columns = df.columns.str.lower()
     df = df.apply(lambda x: x.astype(str).str.lower())
+
+    # returns all dupes
+    duplicates = df[df['animal id'].duplicated()]
+
+    # duplicate ids -- that need to drop
+    dupe_list = list(duplicates['animal id'].unique())
+
+    # removed dupes --  shape after dropping dupes (124940, 23)
+    df = df[~df['animal id'].isin(dupe_list)]
+
+    # rename columns
     new_columns = {
         'datetime_x': 'outcome_datetime',
         'datetime_y': 'intake_datetime',
-        'monthyear_x': 'outcome_monthyear',
-        'monthyear_y': 'intake_monthyear',
         'name_y': 'name',
         'breed_y': 'breed',
         'animal type_y': 'species',
         'outcome type': 'outcome',
         'color_y': 'color',
-        'sex upon outcome': 'outcome_sex',
-        'sex upon intake': 'intake_sex',
+        'sex upon outcome': 'sex',
         'intake type': 'intake_type',
-        'age upon intake': 'intake_age',
-        'age upon outcome': 'outcome_age',
         'date of birth': 'dob',
-        'intake condition': 'intake_condition',
-        'found location': 'found_location',
+        'intake condition': 'condition',
         'animal id': 'id'      
     }
     df = df.rename(columns=new_columns)
-    #dropped unnecessary column names, outcome subtype, due to having over 119k of 193k rows empty, intake_monthyear, outcome_month_year, animal type_x, are predominantly the same, 
-    columns_to_drop = ['outcome subtype', 'name_x', 'breed_x', 'animal type_x', 'color_x', 'intake_monthyear', 'outcome_monthyear']
-    df = df.drop(columns=columns_to_drop)
 
-    # dropping nulls
-    df.dropna(subset=['intake_sex'], inplace=True)
-    df.dropna(subset=['outcome'], inplace=True)
 
-    # create dates
+
+    # Filter 'species' to only return cats or dogs
+    df = df[df['species'].isin(['dog', 'cat'])]
+
+    ### drop nulls
+    # drop nan from outcome
+    df = df[df.outcome != "nan"]
+
+    # drop nan from intake type
+    df = df[df.intake_type != "nan"]
+
+    # drop nan from sex and 
+    df = df[~df['sex'].isin(['nan', 'unknown'])]
+
+    # Replace 'nan' values in 'name' column with 0
+    df['name'] = df['name'].replace('nan', 0)
+    # Replace all other names with 1
+    df.loc[df['name'] != 0, 'name'] = 1
+
+    # outlier drops
+    # drop wildlife variable from intake type
+    df = df[df.intake_type != "wildlife"]
+
+    # fix datatypes
+    df['dob'] = pd.to_datetime(df['dob'])
+
+    # change dtype to datetime
     df['outcome_date'] = pd.to_datetime(df['outcome_datetime']).dt.strftime('%m/%d/%Y').astype("datetime64")
     df['intake_date'] = pd.to_datetime(df['intake_datetime']).dt.strftime('%m/%d/%Y').astype("datetime64")
-    df['dob'] = pd.to_datetime(df['dob'], format='%m/%d/%Y')
 
-    # create ages
-    df['intake_age'] = (df.intake_date - df.dob).dt.days
+    # create release age
     df['outcome_age'] = (df.outcome_date - df.dob).dt.days
 
-    # days in center
-    df["tenure_days"] = (df['outcome_age'] - df['intake_age'] )
-    # filter weird dates
-    df = df[df.tenure_days > 0]
-    
-    
-    # color and intake condition columns
-    df = transform_color(df)
-    df = transform_intake_condition(df)
+    # Convert 'outcome_date' column to datetime
+    df['outcome_date'] = pd.to_datetime(df['outcome_date'])
+    # create month and year 
+    df["rel_month"] = df['outcome_date'].dt.strftime('%b')
+    df["rel_year"] = df['outcome_date'].dt.year
 
-    #filtered for cats and dogs
-    df = df[df['species'].isin(['cat', 'dog'])]
-    df = df[df['outcome'].isin(['adoption', 'transfer', 'rto-adopt', 'return to owner', 'euthanasia'])]
-    df = df[df['intake_type'].isin(['stray', 'owner surrender', 'public assist', 'abandoned'])]
-
-    # mix breeds columns
-    df['mix_breeds'] = np.where(df['breed'].str.contains('mix', case=False, na=False), 1, 0)
-    df['two_breeds'] = np.where(df['breed'].str.contains('/', case=False, na=False), 1, 0)
-    df['pure_breed'] = np.where((df['mix_breeds'] == 0) & (df['two_breeds'] == 0), 1, 0)
-
-    # if pet has a name 1, if not 0 place in column has_name
-    df['has_name'] = np.where(df['name'] != 'nan', 1, 0)
-
-    # dropping unknown sex from df
-    df = df[(df.intake_sex != 'unknown') & (df.intake_sex != 'nan')]
-    
-    # update data type
-    df.outcome_age = df.outcome_age.astype('int')
-    
+    # age column
     # Define the conditions for each age category
     conditions = [
         (df['outcome_age'] <= 730),
@@ -192,6 +193,7 @@ def get_prep_aa(df):
     ]
     # Define the corresponding values for each age category
     values = ['puppy', 'adult', 'senior']
+<<<<<<< HEAD
     # Create the 'age_category' column based on the conditions and values
     df['age_category'] = pd.np.select(conditions, values, default='unknown')
     
@@ -208,8 +210,110 @@ def get_prep_aa(df):
                                              'intake_condition', 'intake_sex', 'primary_color', 'age_category'])
     model_df = dummies_df.drop(columns=['dob', 'intake_date', 'outcome_date', 'breed'])
     return df, model_df
+=======
+>>>>>>> 671eae483c00eb80073d56dd9e01ba26f1c96c9d
 
-    return df
+    # lower cases df
+    df.columns = df.columns.str.lower()
+    df = df.apply(lambda x: x.astype(str).str.lower())
+
+    # returns all dupes
+    duplicates = df[df['id'].duplicated()]
+
+    # duplicate ids -- that need to drop
+    dupe_list = list(duplicates['id'].unique())
+
+    # removed dupes --  shape after dropping dupes (124940, 23)
+    df = df[~df['id'].isin(dupe_list)]
+
+    # rename columns
+    new_columns = {
+        'datetime_x': 'outcome_datetime',
+        'datetime_y': 'intake_datetime',
+        'name_y': 'name',
+        'breed_y': 'breed',
+        'animal type_y': 'species',
+        'outcome type': 'outcome',
+        'color_y': 'color',
+        'sex upon outcome': 'sex',
+        'intake type': 'intake_type',
+        'date of birth': 'dob',
+        'intake condition': 'condition',
+        'animal id': 'id'      
+    }
+    df = df.rename(columns=new_columns)
+
+    # Filter 'species' to only return cats or dogs
+    df = df[df['species'].isin(['dog', 'cat'])]
+
+    ### drop nulls
+    # drop nan from outcome
+    df = df[df.outcome != "nan"]
+
+    # drop nan from intake type
+    df = df[df.intake_type != "nan"]
+
+    # drop nan from sex and 
+    df = df[~df['sex'].isin(['nan', 'unknown'])]
+
+    # Replace 'nan' values in 'name' column with 0
+    df['name'] = df['name'].replace('nan', 0)
+    # Replace all other names with 1
+    df.loc[df['name'] != 0, 'name'] = 1
+
+    # outlier drops
+    # drop wildlife variable from intake type
+    df = df[df.intake_type != "wildlife"]
+
+    # change dtype to datetime
+    df['outcome_date'] = pd.to_datetime(df['outcome_datetime']).dt.strftime('%m/%d/%Y').astype("datetime64")
+    df['intake_date'] = pd.to_datetime(df['intake_datetime']).dt.strftime('%m/%d/%Y').astype("datetime64")
+
+    # Convert 'outcome_date' column to datetime
+    df['outcome_date'] = pd.to_datetime(df['outcome_date'])
+    # create month and year 
+    df["rel_month"] = df['outcome_date'].dt.strftime('%b')
+    df["rel_year"] = df['outcome_date'].dt.year
+
+    # Create a mapping dictionary for renaming
+    mapping = {
+        'return to owner': 'adoption',
+        'rto-adopt': 'adoption'
+    }
+    # Rename values in 'outcome' column based on the mapping dictionary
+    df['outcome'] = df['outcome'].replace(mapping)
+
+    # Rename remaining values to 'other'
+    df.loc[~df['outcome'].isin(['adoption', 'transfer']), 'outcome'] = 'other'
+
+    # create intake columns and colors
+    df = transform_intake_condition(df)
+    df = transform_color(df)
+    
+    # update dtypes
+    df.name = df.name.astype('int')
+    df.outcome_age = df.outcome_age.astype('int')
+    df['dob'] = pd.to_datetime(df['dob'])
+
+    # drop these columns
+    df = df.drop(columns=["id","name_x", "monthyear_x", "animal type_x",
+                     "sex upon intake", "age upon outcome", "breed_x",
+                     "color_x", "monthyear_y", "found location", "age upon intake",
+                          "outcome subtype", "intake_datetime", "outcome_datetime", "outcome_date", "intake_date"])
+    # Rename values in 'breed' column
+    df.loc[df['breed'].str.contains('mix|domestic shorthair|domestic medium hair|domestic longhair', case=False), 'breed'] = 'mix'
+    df.loc[df['breed'].str.contains('/', na=False), 'breed'] = 'two breeds'
+    df.loc[~df['breed'].isin(['two breeds', 'mix']), 'breed'] = 'single breed'
+
+    dummy_df = pd.get_dummies(df[['outcome', 'sex','intake_type', 'condition',
+                             'species', 'breed', 'rel_month', 'rel_year', 'primary_color']],
+                          drop_first=True)
+    
+    bool_df = df[['name', 'outcome_age', 'is_tabby', 'mix_color']]
+
+    model_df = pd.concat([bool_df, dummy_df], axis=1)
+
+    return df, model_df
 
 #This confirms and Validates my split.
 def split_data(df, target_variable):
