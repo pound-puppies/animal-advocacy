@@ -35,38 +35,42 @@ from sklearn.linear_model import LogisticRegression
 
                                                             ################# Functions for Visualization ############
 
-        
+def sex_viz():
+    '''
+    This function pulls in a chart comparing sex and outcome using plotly express
+    '''
+    grouped_data = train.groupby(['sex', 'outcome']).size().reset_index(name='count')
+    fig = px.bar(grouped_data, x='sex', y='count', color='outcome', barmode='group')
+    fig.update_layout(title='Sex vs Outcome')  # Update layout to set the title
+    fig.show()        
         
 
 
                                                             ####################### Stats Functions ###################
 
+def sex_stats():
+    '''
+    This function runs a chi2 stats test on sex and outcome.
+    It returns the contingency table and results in a pandas DataFrame.
+    '''
+    # Create a contingency table
+    contingency_table = pd.crosstab(train['sex'], train['outcome'])
 
-def eval_dist(r, p, α=0.05):
-    if p > α:
-        return print(f"""The data is normally distributed""")
-    else:
-        return print(f"""The data is NOT normally distributed""")   
-    
-def eval_Spearman(r, p, α=0.05):
-    if p < α:
-        return print(f"""We reject H₀, there is a monotonic relationship.
-Spearman's r: {r:2f}
-P-value: {p}""")
-    else:
-        return print(f"""We fail to reject H₀: that there is a monotonic relationship.
-Spearman's r: {r:2f}
-P-value: {p}""")
+    # Perform the chi-square test
+    chi2, p_value, dof, expected = chi2_contingency(contingency_table)
 
-    
-def eval_Pearson(r, p, α=0.05):
-    if p < α:
-        return print(f"""We reject H₀, there is a linear relationship with a Correlation Coefficient of {r:2f}.
-P-value: {p}""")
-    else:
-        return print(f"""We fail to reject H₀: that there is a linear relationship.
-Pearson's r: {r:2f}
-P-value: {p}""")
+    # Create a DataFrame for the contingency table
+    contingency_sex = pd.DataFrame(contingency_table)
+
+    # Create a DataFrame for the results
+    results = pd.DataFrame({
+        'Chi-square statistic': [chi2],
+        'p-value': [p_value],
+        'Degrees of freedom': [dof]
+    })
+
+    # Return the contingency table and results DataFrame
+    return results
 
 
                                                             ###################### Modeling Functions ##################
