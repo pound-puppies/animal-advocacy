@@ -112,14 +112,6 @@ def sex_viz(train):
     fig.update_layout(title='Sex vs Outcome')  # Update layout to set the title
     fig.show()        
 
-def breed_viz(train):
-    # visualize relationship breed affect adoption
-    plt.figure(figsize=(12,8))
-    sns.countplot(x='breed', hue='outcome', data=train, palette=['green', 'gold', 'silver'])
-    plt.title('Does breed affect animal adoption?')
-    plt.xlabel('Breed')
-    plt.ylabel('Outcome')
-    plt.show()
     
 def species_viz(train):
     '''
@@ -129,8 +121,27 @@ def species_viz(train):
     fig = px.bar(grouped_data, x='species', y='count', color='outcome', barmode='group')
     fig.update_layout(title='Species vs Outcome')  # Update layout to set the title
     fig.show()   
+    
+def month_viz(train):
+    '''
+    This function pulls in a chart comparing sex and outcome using plotly express
+    '''
+    month_order = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+    train['rel_month'] = pd.Categorical(train['rel_month'], categories=month_order, ordered=True)
+    grouped_data = train.groupby(['rel_month', 'outcome']).size().reset_index(name='count')
+    grouped_data.sort_values('rel_month', inplace=True)
+    fig = px.bar(grouped_data, x='rel_month', y='count', color='outcome', barmode='group')
+    fig.update_layout(title='Sex vs Outcome')  # Update layout to set the title
+    fig.show() 
 
-
+def breed_viz(train):
+    '''
+    This function pulls in a chart comparing sex and outcome using plotly express
+    '''
+    grouped_data = train.groupby(['breed', 'outcome']).size().reset_index(name='count')
+    fig = px.bar(grouped_data, x='breed', y='count', color='outcome', barmode='group')
+    fig.update_layout(title='Breed vs Outcome')  # Update layout to set the title
+    fig.show()  
 
 
     
@@ -242,6 +253,30 @@ def species_stats(train):
 
     # Return the contingency table and results DataFrame
     return results
+
+def month_stats(train):
+    '''
+    This function runs a chi2 stats test on sex and outcome.
+    It returns the contingency table and results in a pandas DataFrame.
+    '''
+    # Create a contingency table
+    contingency_table = pd.crosstab(train['rel_month'], train['outcome'])
+
+    # Perform the chi-square test
+    chi2, p_value, dof, expected = stats.chi2_contingency(contingency_table)
+
+    # Create a DataFrame for the contingency table
+    contingency_sex = pd.DataFrame(contingency_table)
+
+    # Create a DataFrame for the results
+    results = pd.DataFrame({
+        'Chi-square statistic': [chi2],
+        'p-value': [p_value],
+        'Degrees of freedom': [dof]
+    })
+
+    # Return the contingency table and results DataFrame
+    return results
                                                             ###################### Modeling Functions ##################
         
 
@@ -269,7 +304,7 @@ def get_xy():
     # Running preperation 
     df, model_df = w.prep_df(df)
     # Split
-    train, validate, test = w.split_data(w.model_df,'outcome')
+    train, validate, test = w.split_data(model_df,'outcome')
     # create X & y version of train, where y is a series with just the target variable and X are all the features.    
     X_train = train.drop(['outcome'], axis=1)
     y_train = train.outcome
