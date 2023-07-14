@@ -111,7 +111,26 @@ def sex_viz(train):
     fig = px.bar(grouped_data, x='sex', y='count', color='outcome', barmode='group')
     fig.update_layout(title='Sex vs Outcome')  # Update layout to set the title
     fig.show()        
-        
+
+def breed_viz(train):
+    # visualize relationship breed affect adoption
+    plt.figure(figsize=(12,8))
+    sns.countplot(x='breed', hue='outcome', data=train, palette=['green', 'gold', 'silver'])
+    plt.title('Does breed affect animal adoption?')
+    plt.xlabel('Breed')
+    plt.ylabel('Outcome')
+    plt.show()
+    
+def species_viz(train):
+    '''
+    This function pulls in a chart comparing sex and outcome using plotly express
+    '''
+    grouped_data = train.groupby(['species', 'outcome']).size().reset_index(name='count')
+    fig = px.bar(grouped_data, x='species', y='count', color='outcome', barmode='group')
+    fig.update_layout(title='Species vs Outcome')  # Update layout to set the title
+    fig.show()   
+
+
 
 
     
@@ -175,7 +194,54 @@ def sex_stats(train):
     # Return the contingency table and results DataFrame
     return results
 
+    
+def breed_stats(train):
+    '''
+    This function runs a chi2 stats test on sex and outcome.
+    It returns the contingency table and results in a pandas DataFrame.
+    '''
+    # Create a contingency table
+    contingency_table = pd.crosstab(train['breed'], train['outcome'])
 
+    # Perform the chi-square test
+    chi2, p_value, dof, expected = stats.chi2_contingency(contingency_table)
+
+    # Create a DataFrame for the contingency table
+    contingency_sex = pd.DataFrame(contingency_table)
+
+    # Create a DataFrame for the results
+    results = pd.DataFrame({
+        'Chi-square statistic': [chi2],
+        'p-value': [p_value],
+        'Degrees of freedom': [dof]
+    })
+
+    # Return the contingency table and results DataFrame
+    return results
+
+def species_stats(train):
+    '''
+    This function runs a chi2 stats test on sex and outcome.
+    It returns the contingency table and results in a pandas DataFrame.
+    '''
+    # Create a contingency table
+    contingency_table = pd.crosstab(train['species'], train['outcome'])
+
+    # Perform the chi-square test
+    chi2, p_value, dof, expected = stats.chi2_contingency(contingency_table)
+
+    # Create a DataFrame for the contingency table
+    contingency_sex = pd.DataFrame(contingency_table)
+
+    # Create a DataFrame for the results
+    results = pd.DataFrame({
+        'Chi-square statistic': [chi2],
+        'p-value': [p_value],
+        'Degrees of freedom': [dof]
+    })
+
+    # Return the contingency table and results DataFrame
+    return results
                                                             ###################### Modeling Functions ##################
         
 
