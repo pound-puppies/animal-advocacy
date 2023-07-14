@@ -30,6 +30,9 @@ def left_join_csv(outcomes_file, intakes_file, merged_file):
     
     return merged_data
 
+df = pd.read_csv('merged_data.csv')
+
+
                                                         #################### Prepare Functions ##########################
     
 def transform_intake_condition(df):
@@ -117,16 +120,12 @@ def prep_df(df):
 # lower cases df
     df.columns = df.columns.str.lower()
     df = df.apply(lambda x: x.astype(str).str.lower())
-
     # returns all dupes
     duplicates = df[df['animal id'].duplicated()]
-
     # duplicate ids -- that need to drop
     dupe_list = list(duplicates['animal id'].unique())
-
     # removed dupes --  shape after dropping dupes (124940, 23)
     df = df[~df['animal id'].isin(dupe_list)]
-
     # rename columns
     new_columns = {
         'datetime_x': 'outcome_datetime',
@@ -143,47 +142,34 @@ def prep_df(df):
         'animal id': 'id'      
     }
     df = df.rename(columns=new_columns)
-
-
-
     # Filter 'species' to only return cats or dogs
     df = df[df['species'].isin(['dog', 'cat'])]
-
     ### drop nulls
     # drop nan from outcome
     df = df[df.outcome != "nan"]
-
     # drop nan from intake type
     df = df[df.intake_type != "nan"]
-
     # drop nan from sex and 
     df = df[~df['sex'].isin(['nan', 'unknown'])]
-
     # Replace 'nan' values in 'name' column with 0
     df['name'] = df['name'].replace('nan', 0)
     # Replace all other names with 1
     df.loc[df['name'] != 0, 'name'] = 1
-
     # outlier drops
     # drop wildlife variable from intake type
     df = df[df.intake_type != "wildlife"]
-
     # fix datatypes
     df['dob'] = pd.to_datetime(df['dob'])
-
     # change dtype to datetime
     df['outcome_date'] = pd.to_datetime(df['outcome_datetime']).dt.strftime('%m/%d/%Y').astype("datetime64")
     df['intake_date'] = pd.to_datetime(df['intake_datetime']).dt.strftime('%m/%d/%Y').astype("datetime64")
-
     # create release age
     df['outcome_age'] = (df.outcome_date - df.dob).dt.days
-
     # Convert 'outcome_date' column to datetime
     df['outcome_date'] = pd.to_datetime(df['outcome_date'])
     # create month and year 
     df["rel_month"] = df['outcome_date'].dt.strftime('%b')
     df["rel_year"] = df['outcome_date'].dt.year
-
     # age column
     # Define the conditions for each age category
     conditions = [
@@ -193,20 +179,15 @@ def prep_df(df):
     ]
     # Define the corresponding values for each age category
     values = ['puppy', 'adult', 'senior']
-
     # lower cases df
     df.columns = df.columns.str.lower()
     df = df.apply(lambda x: x.astype(str).str.lower())
-
     # returns all dupes
     duplicates = df[df['id'].duplicated()]
-
     # duplicate ids -- that need to drop
     dupe_list = list(duplicates['id'].unique())
-
     # removed dupes --  shape after dropping dupes (124940, 23)
     df = df[~df['id'].isin(dupe_list)]
-
     # rename columns
     new_columns = {
         'datetime_x': 'outcome_datetime',
@@ -223,39 +204,30 @@ def prep_df(df):
         'animal id': 'id'      
     }
     df = df.rename(columns=new_columns)
-
     # Filter 'species' to only return cats or dogs
     df = df[df['species'].isin(['dog', 'cat'])]
-
     ### drop nulls
     # drop nan from outcome
     df = df[df.outcome != "nan"]
-
     # drop nan from intake type
     df = df[df.intake_type != "nan"]
-
     # drop nan from sex and 
     df = df[~df['sex'].isin(['nan', 'unknown'])]
-
     # Replace 'nan' values in 'name' column with 0
     df['name'] = df['name'].replace('nan', 0)
     # Replace all other names with 1
     df.loc[df['name'] != 0, 'name'] = 1
-
     # outlier drops
     # drop wildlife variable from intake type
     df = df[df.intake_type != "wildlife"]
-
     # change dtype to datetime
     df['outcome_date'] = pd.to_datetime(df['outcome_datetime']).dt.strftime('%m/%d/%Y').astype("datetime64")
     df['intake_date'] = pd.to_datetime(df['intake_datetime']).dt.strftime('%m/%d/%Y').astype("datetime64")
-
     # Convert 'outcome_date' column to datetime
     df['outcome_date'] = pd.to_datetime(df['outcome_date'])
     # create month and year 
     df["rel_month"] = df['outcome_date'].dt.strftime('%b')
     df["rel_year"] = df['outcome_date'].dt.year
-
     # Create a mapping dictionary for renaming
     mapping = {
         'return to owner': 'adoption',
@@ -263,10 +235,8 @@ def prep_df(df):
     }
     # Rename values in 'outcome' column based on the mapping dictionary
     df['outcome'] = df['outcome'].replace(mapping)
-
     # Rename remaining values to 'other'
     df.loc[~df['outcome'].isin(['adoption', 'transfer']), 'outcome'] = 'other'
-
     # create intake columns and colors
     df = transform_intake_condition(df)
     df = transform_color(df)
@@ -275,7 +245,6 @@ def prep_df(df):
     df.name = df.name.astype('int')
     df.outcome_age = df.outcome_age.astype('int')
     df['dob'] = pd.to_datetime(df['dob'])
-
     # drop these columns
     df = df.drop(columns=["id","name_x", "monthyear_x", "animal type_x",
                      "sex upon intake", "age upon outcome", "breed_x",
@@ -285,16 +254,15 @@ def prep_df(df):
     df.loc[df['breed'].str.contains('mix|domestic shorthair|domestic medium hair|domestic longhair', case=False), 'breed'] = 'mix'
     df.loc[df['breed'].str.contains('/', na=False), 'breed'] = 'two breeds'
     df.loc[~df['breed'].isin(['two breeds', 'mix']), 'breed'] = 'single breed'
-
-    dummy_df = pd.get_dummies(df[['outcome', 'sex','intake_type', 'condition',
-                             'species', 'breed', 'rel_month', 'rel_year', 'primary_color']],
+    dummy_df = pd.get_dummies(df[[ 'sex','intake_type', 'condition',
+                             'species', 'breed', 'primary_color']],
                           drop_first=True)
     
-    bool_df = df[['name', 'outcome_age', 'is_tabby', 'mix_color']]
-
+    bool_df = df[['outcome','name', 'is_tabby', 'mix_color']]
     model_df = pd.concat([bool_df, dummy_df], axis=1)
-
     return df, model_df
+
+df, model_df = prep_df(df)
 
 #This confirms and Validates my split.
 def split_data(df, target_variable):
@@ -311,7 +279,7 @@ def split_data(df, target_variable):
                                        random_state=123,
                                        stratify=train[target_variable])
     print(f'train -> {train.shape}, {round(train.shape[0]*100 / df.shape[0],2)}%')
-    print(f'validate -> {validate.shape},{round(validate.shape[0]*100 / df.shape[0],2)}%')
+    print(f'validate -> {validate.shape},{round(validate.shape[0]*100 /df.shape[0],2)}%')
     print(f'test -> {test.shape}, {round(test.shape[0]*100 / df.shape[0],2)}%')
     
     return train, validate, test

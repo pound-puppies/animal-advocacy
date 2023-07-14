@@ -15,21 +15,28 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import seaborn as sns
+import plotly.express as px
 
 #scaling
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
-from sklearn.metrics import precision_score, accuracy_score, recall_score, classification_report
+
 
 #model
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.linear_model import LogisticRegression
-
-import scipy.stats as stats
-
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_score, accuracy_score, recall_score, classification_report
+from scipy import stats
 
 
                                                             ##################### Functions for Exploration #########
+#df = pd.read_csv('merged_data.csv')   
+#w.prep_df(df)
+#train, validate, test = w.split_data(df, 'outcome')   
+
+
 def age_cat_plots(model_df):
     sns.barplot(x = model_df.age_category_puppy, y = model_df.outcome_adoption, data=df)
     # Add labels and title
@@ -38,15 +45,83 @@ def age_cat_plots(model_df):
     # Show the plot
     plt.show()
     
+def summary(df):
+    print(df.head()),
+    print(df.describe()),
+    print(df.shape)
+    
+def plot_categorical_variables_1(df):
+    for column in df.columns:
+        if df[column].dtype == 'object':
+            if len(df[column].unique()) > 10:
+                plt.figure(figsize=(12, 6))
+            else:
+                plt.figure()
+                
+                sns.countplot(df[column])
+                plt.xticks(rotation=45)
+                plt.show()
+            
+def plot_categorical_variables_2(df):
+    for column in df.columns:
+        if df[column].dtype == 'object':
+            fig = px.histogram(df, x=column)
+            fig.update_traces(hovertemplate='Count: %{y}')
+            fig.update_layout(title=column)
+            fig.show()
+            
+def plot_categorical_variables_3(df):
+    color_palette = px.colors.qualitative.Plotly
+    for column in df.columns:
+        if df[column].dtype == 'object':
+            fig = px.histogram(df, x=column, color_discrete_sequence=color_palette)
+            fig.update_traces(hovertemplate='Count: %{y}')
+            fig.update_layout(title=column)
+            fig.show()
+
+def month_adopt(df):
+    sns.barplot(x=df.value_counts('rel_month'),
+                y=df.value_counts('rel_month'), data=df)
+    # Set the plot title and labels
+    plt.title('Count of Records by Month')
+    plt.xlabel('Month')
+    plt.ylabel('Adopted')
+    # Show the plot
+    plt.show()
+    
+def month_outcome(df):
+    # Group the data by month and AdoptionStatus, and count the occurrences
+    grouped = df.groupby(['rel_month', 'outcome']).size().unstack()
+    # Create a stacked bar plot
+    grouped.plot(kind='bar', stacked=True)
+    plt.title('Adoptions by Month')
+    plt.xlabel('Month')
+    plt.ylabel('Count')
+    # Show the legend
+    plt.legend()
+    # Display the plot
+    plt.show()
     
 
-                                                            ################# Functions for Visualization ############
+def sex_viz(train):
+    '''
+    This function pulls in a chart comparing sex and outcome using plotly express
+    '''
+    grouped_data = train.groupby(['sex', 'outcome']).size().reset_index(name='count')
+    fig = px.bar(grouped_data, x='sex', y='count', color='outcome', barmode='group')
+    fig.update_layout(title='Sex vs Outcome')  # Update layout to set the title
+    fig.show()        
+        
 
+
+    
+
+                                ################# Functions for Visualization ############
         
         
 
 
-                                                            ####################### Stats Functions ###################
+                               ####################### Stats Functions ###################
 
 
 def eval_dist(r, p, α=0.05):
@@ -74,17 +149,36 @@ P-value: {p}""")
         return print(f"""We fail to reject H₀: that there is a linear relationship.
 Pearson's r: {r:2f}
 P-value: {p}""")
+    
+
+def sex_stats(train):
+    '''
+    This function runs a chi2 stats test on sex and outcome.
+    It returns the contingency table and results in a pandas DataFrame.
+    '''
+    # Create a contingency table
+    contingency_table = pd.crosstab(train['sex'], train['outcome'])
+
+    # Perform the chi-square test
+    chi2, p_value, dof, expected = stats.chi2_contingency(contingency_table)
+
+    # Create a DataFrame for the contingency table
+    contingency_sex = pd.DataFrame(contingency_table)
+
+    # Create a DataFrame for the results
+    results = pd.DataFrame({
+        'Chi-square statistic': [chi2],
+        'p-value': [p_value],
+        'Degrees of freedom': [dof]
+    })
+
+    # Return the contingency table and results DataFrame
+    return results
 
 
                                                             ###################### Modeling Functions ##################
         
-        
-        
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import recall_score
-from sklearn.metrics import precision_score
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.neighbors import KNeighborsClassifier
+
 
 def get_baseline(y_train):
     '''
@@ -109,7 +203,7 @@ def get_xy():
     # Running preperation 
     df, model_df = w.prep_df(df)
     # Split
-    train, validate, test = w.split_data(model_df,'outcome')
+    train, validate, test = w.split_data(w.model_df,'outcome')
     # create X & y version of train, where y is a series with just the target variable and X are all the features.    
     X_train = train.drop(['outcome'], axis=1)
     y_train = train.outcome
