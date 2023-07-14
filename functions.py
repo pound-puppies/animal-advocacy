@@ -22,13 +22,15 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
 
 
 #model
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import precision_score, accuracy_score, recall_score, classification_report
+from sklearn.metrics import accuracy_score, precision_score, accuracy_score, recall_score, classification_report
 from scipy import stats
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+
 
 
                                                             ##################### Functions for Exploration #########
@@ -142,13 +144,6 @@ def breed_viz(train):
     fig = px.bar(grouped_data, x='breed', y='count', color='outcome', barmode='group')
     fig.update_layout(title='Breed vs Outcome')  # Update layout to set the title
     fig.show()  
-
-
-    
-
-                                ################# Functions for Visualization ############
-        
-        
 
 
                                ####################### Stats Functions ###################
@@ -313,15 +308,6 @@ def get_xy():
     X_test = test.drop(['outcome'], axis=1)
     y_test = test.outcome
     return X_train,y_train,X_validate,y_validate,X_test,y_test
-
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.svm import SVC
-from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import accuracy_score, recall_score, precision_score
-import pandas as pd
 
 
 def create_models(seed=123):
