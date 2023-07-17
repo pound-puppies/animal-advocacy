@@ -40,12 +40,6 @@ from sklearn.naive_bayes import GaussianNB
 
 
 def age_cat_plots(model_df):
-    '''
-    Plot a bar chart to visualize the relationship between the age_category_puppy and the outcome_adoption in the given DataFrame.
-
-    Parameters:
-        model_df (DataFrame): The DataFrame containing the data to be visualized.
-    '''
     sns.barplot(x = model_df.age_category_puppy, y = model_df.outcome_adoption, data=model_df)
     # Add labels and title
     plt.ylabel('age_category_puppy')
@@ -54,23 +48,11 @@ def age_cat_plots(model_df):
     plt.show()
     
 def summary(df):
-    '''
-    Display a summary of the DataFrame, including the first few rows, basic statistics, and the shape of the DataFrame.
-
-    Parameters:
-        df (DataFrame): The DataFrame to be summarized.
-    '''
     print(df.head()),
     print(df.describe()),
     print(df.shape)
     
 def plot_categorical_variables_1(df):
-    '''
-    Plot count plots for categorical variables in the DataFrame, one plot for each categorical column. If a column has more than 10 unique categories, the plot will be displayed in a larger size.
-
-    Parameters:
-        df (DataFrame): The DataFrame containing categorical variables to be visualized.
-    '''
     for column in df.columns:
         if df[column].dtype == 'object':
             if len(df[column].unique()) > 10:
@@ -83,12 +65,6 @@ def plot_categorical_variables_1(df):
                 plt.show()
             
 def plot_categorical_variables_2(df):
-    '''
-    Plot histograms for categorical variables in the DataFrame using Plotly. Each histogram shows the count of occurrences for each unique category.
-
-    Parameters:
-        df (DataFrame): The DataFrame containing categorical variables to be visualized.
-    '''
     for column in df.columns:
         if df[column].dtype == 'object':
             fig = px.histogram(df, x=column)
@@ -97,12 +73,6 @@ def plot_categorical_variables_2(df):
             fig.show()
             
 def plot_categorical_variables_3(df):
-    '''
-    Plot histograms for categorical variables in the DataFrame using Plotly with colored bars for each unique category.
-
-    Parameters:
-        df (DataFrame): The DataFrame containing categorical variables to be visualized.
-    '''
     color_palette = px.colors.qualitative.Plotly
     for column in df.columns:
         if df[column].dtype == 'object':
@@ -112,12 +82,6 @@ def plot_categorical_variables_3(df):
             fig.show()
 
 def month_adopt(df):
-    '''
-    Plot a bar chart to display the count of adoption records by month.
-
-    Parameters:
-        df (DataFrame): The DataFrame containing adoption data with a column representing the month of adoption.
-    '''
     sns.barplot(x=df.value_counts('rel_month'),
                 y=df.value_counts('rel_month'), data=df)
     # Set the plot title and labels
@@ -128,12 +92,6 @@ def month_adopt(df):
     plt.show()
     
 def month_outcome(df):
-    '''
-    Plot a stacked bar chart to visualize the number of adoptions by month and the outcome type (e.g., adoption, return, etc.).
-
-    Parameters:
-        df (DataFrame): The DataFrame containing adoption data with a column representing the month of adoption and another column for outcome type.
-    '''
     # Group the data by month and AdoptionStatus, and count the occurrences
     grouped = df.groupby(['rel_month', 'outcome']).size().unstack()
     # Create a stacked bar plot
@@ -175,7 +133,7 @@ def month_viz(train):
     grouped_data = train.groupby(['rel_month', 'outcome']).size().reset_index(name='count')
     grouped_data.sort_values('rel_month', inplace=True)
     fig = px.bar(grouped_data, x='rel_month', y='count', color='outcome', barmode='group')
-    fig.update_layout(title='Month vs Outcome')  # Update layout to set the title
+    fig.update_layout(title='Sex vs Outcome')  # Update layout to set the title
     fig.show() 
 
 def breed_viz(train):
@@ -187,46 +145,17 @@ def breed_viz(train):
     fig.update_layout(title='Breed vs Outcome')  # Update layout to set the title
     fig.show()  
 
-def condition_viz(train):
-    '''
-    This function pulls in a chart comparing condition and outcome using plotly express
-    '''
-    grouped_data = train.groupby(['condition', 'outcome']).size().reset_index(name='count').sort_values(by="condition", ascending=False)
-    fig = px.bar(grouped_data, x='condition', y='count', color='outcome', barmode='group')
-    fig.update_layout(title='Cats and Dogs with Normal Conditions Are More Likely to be Adopted')  # Update layout to set the title
-    fig.show()  
+
                                ####################### Stats Functions ###################
 
 
 def eval_dist(r, p, α=0.05):
-    """
-    Evaluate if the data is normally distributed based on the p-value.
-
-    Parameters:
-        r (float): The correlation coefficient.
-        p (float): The p-value from the statistical test of normality.
-        α (float, optional): The significance level (default is 0.05).
-
-    Returns:
-        None: Prints a message indicating whether the data is normally distributed or not.
-    """
     if p > α:
         return print(f"""The data is normally distributed""")
     else:
         return print(f"""The data is NOT normally distributed""")   
     
 def eval_Spearman(r, p, α=0.05):
-    """
-    Evaluate the Spearman's rank correlation test results.
-
-    Parameters:
-        r (float): The Spearman's rank correlation coefficient.
-        p (float): The p-value from the Spearman's rank correlation test.
-        α (float, optional): The significance level (default is 0.05).
-
-    Returns:
-        None: Prints the test result and the correlation coefficient with associated p-value.
-    """
     if p < α:
         return print(f"""We reject H₀, there is a monotonic relationship.
 Spearman's r: {r:2f}
@@ -238,17 +167,6 @@ P-value: {p}""")
 
     
 def eval_Pearson(r, p, α=0.05):
-    """
-    Evaluate the Pearson correlation test results.
-
-    Parameters:
-        r (float): The Pearson correlation coefficient.
-        p (float): The p-value from the Pearson correlation test.
-        α (float, optional): The significance level (default is 0.05).
-
-    Returns:
-        None: Prints the test result and the correlation coefficient with associated p-value.
-    """
     if p < α:
         return print(f"""We reject H₀, there is a linear relationship with a Correlation Coefficient of {r:2f}.
 P-value: {p}""")
@@ -354,30 +272,6 @@ def month_stats(train):
 
     # Return the contingency table and results DataFrame
     return results
-
-def condition_stats(train):
-    '''
-    This function runs a chi2 stats test on condition and outcome.
-    It returns the contingency table and results in a pandas DataFrame.
-    '''
-    # Create a contingency table
-    contingency_table = pd.crosstab(train['condition'], train['outcome'])
-
-    # Perform the chi-square test
-    chi2, p_value, dof, expected = stats.chi2_contingency(contingency_table)
-
-    # Create a DataFrame for the contingency table
-    contingency_sex = pd.DataFrame(contingency_table)
-
-    # Create a DataFrame for the results
-    results = pd.DataFrame({
-        'Chi-square statistic': [chi2],
-        'p-value': [p_value],
-        'Degrees of freedom': [dof]
-    })
-
-    # Return the contingency table and results DataFrame
-    return results
                                                             ###################### Modeling Functions ##################
         
 
@@ -400,8 +294,13 @@ def get_xy(model_df):
     This function generates X and y for train, validate, and test to use : X_train, y_train, X_validate, y_validate, X_test, y_test = get_xy()
 
     '''
+    # # Acquiring data
+    # df = w.left_join_csv('austin_animal_outcomes.csv', 'austin_animal_intakes.csv', 'merged_data.csv')
+    # # Running preperation 
+    # df, model_df = w.prep_df(df)
+    # Split
     train, validate, test = w.split_data(model_df,'outcome')
-
+    # create X & y version of train, where y is a series with just the target variable and X are all the features.    
     X_train = train.drop(['outcome'], axis=1)
     y_train = train.outcome
     X_validate = validate.drop(['outcome'], axis=1)
@@ -431,28 +330,13 @@ def create_models(seed=123):
     return models
 
 
-def get_models(X_train, y_train, X_validate, y_validate):
-    """
-    Fits multiple machine learning models to the training data and evaluates their performance on the training and validation sets.
-
-    Parameters:
-    X_train (array-like): Training feature data.
-    y_train (array-like): Training target data.
-    X_validate (array-like): Validation feature data.
-    y_validate (array-like): Validation target data.
-    X_test (array-like): Test feature data (not used in this function).
-    y_test (array-like): Test target data (not used in this function).
-
-    Returns:
-    pandas.DataFrame: A dataframe containing the model names, set (train or validate), accuracy, recall, and precision scores.
-    """
-
+def get_models(model_df):
     # create models list
     models = create_models(seed=123)
-
+    X_train, y_train, X_validate, y_validate, X_test, y_test = get_xy(model_df)
     # initialize results dataframe
-    results = pd.DataFrame(columns=['model', 'set', 'accuracy'])
-
+    results = pd.DataFrame(columns=['model', 'set', 'accuracy', 'recall'])
+    
     # loop through models and fit/predict on train and validate sets
     for name, model in models:
         # fit the model with the training data
@@ -463,46 +347,34 @@ def get_models(X_train, y_train, X_validate, y_validate):
         
         # calculate training accuracy, recall, and precision
         train_accuracy = accuracy_score(y_train, train_predictions)
-        # train_recall = recall_score(y_train, train_predictions, average='weighted')
-        # train_precision = precision_score(y_train, train_predictions, average='weighted')
+        train_recall = recall_score(y_train, train_predictions, average='weighted')
+        train_precision = precision_score(y_train, train_predictions, average='weighted')
         
         # make predictions with the validation data
         val_predictions = model.predict(X_validate)
         
         # calculate validation accuracy, recall, and precision
         val_accuracy = accuracy_score(y_validate, val_predictions)
-        # val_recall = recall_score(y_validate, val_predictions, average='weighted')
-        # val_precision = precision_score(y_validate, val_predictions, average='weighted')
+        val_recall = recall_score(y_validate, val_predictions, average='weighted')
+        val_precision = precision_score(y_validate, val_predictions, average='weighted')
+
         
         # append results to dataframe
-        results = results.append({'model': name, 'set': 'train', 'accuracy': train_accuracy}, ignore_index=True)
-        results = results.append({'model': name, 'set': 'validate', 'accuracy': val_accuracy}, ignore_index=True)
+        results = results.append({'model': name, 'set': 'train', 'accuracy': train_accuracy, 'recall': train_recall, 'precision' : train_precision},ignore_index=True)
+        results = results.append({'model': name, 'set': 'validate', 'accuracy': val_accuracy, 'recall': val_recall, 'precision' : val_precision}, ignore_index=True)
+  
 
+        '''
+        this section left in case I want to return to printed format rather than data frame
+        # print classifier accuracy and recall
+        print('Classifier: {}, Train Accuracy: {}, Train Recall: {}, Validation Accuracy: {}, Validation Recall: {}'.format(name, train_accuracy, train_recall, val_accuracy, val_recall))
+        '''
     return results
-
 
 # test model function 
 def run_gradient_boost(X_train, y_train, X_test, y_test):
-    """
-    Trains a Gradient Boosting Classifier on the given training data (X_train, y_train),
-    makes predictions on the test data (X_test), and calculates accuracy, recall, and precision
-    on the test set.
+    
 
-    Parameters:
-        X_train (array-like): Training data features.
-        y_train (array-like): Training data target labels.
-        X_test (array-like): Test data features.
-        y_test (array-like): Test data target labels.
-
-    Returns:
-        pandas.DataFrame: A DataFrame containing the results of the model evaluation on the test set.
-                          The DataFrame has the following columns:
-                          - 'model': Name of the model used ('gradient_boosting').
-                          - 'set': Indicates the data set evaluated ('test').
-                          - 'accuracy': Accuracy score on the test set.
-                          - 'recall': Weighted recall score on the test set.
-                          - 'precision': Weighted precision score on the test set.
-    """
     # Create and fit the Gradient Boosting model
     model = GradientBoostingClassifier(random_state=123)
     model.fit(X_train, y_train)
