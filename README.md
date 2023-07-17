@@ -6,45 +6,38 @@
 * Using the Austin Animal Center data from 2013 to present, our team will create a model to best predict whether an cat or dog will be adopted. The purpose is to give stakeholders (taxpayers, local government) can use the model as a tool to decide where to focus resources to increase adoption rates. The key is early intervention for cats/dogs to increase adoption resources on those with lower rates of adoption. 
 
 ### Goals¶
-* Construct an email answering at least 4 questions 
-* Deliver a final report with predictive model to the data science team 
-* Deliver a slide with key points
-* Deliver a predictive model any animal shelter can adopt
+* Discover drivers of outcome
+* Use drivers of outcomes to develop machine learning models to predict outcomes
 
 ### Initial Thoughts
-* We believe there are key features we possess in the data set such as breed, age, and others that will make a strong predictive model.
+* Our initial hypothesis is that the drivers of outcome will be breed, age, condition, species, and sex.
 
 ## Initial hypotheses and/or questions you have of the data, ideas
 
-* 1. Does breed affect whether an animal will be adopted?
-* 2. Does age affect whether an animal will be adopted?
-* 3. Does condition affect whether an animal will be adopted?
-* 4. 
+- Is Month Related to Outcome?
+- Is Breed Related to Outcome?
+- Is Sex Related to Outcome?
+- Is Species Related to Outcome?
+- Is Condition Related to Outcome
 
 *****************************************
 ## Project Plan 
-* Data acquired and join were from Dallasopendata and austin animal center
+* Data acquired and join were from Austin Animal Center
     * Files were downloaded and converted to dataframes from xls format
-* It contained 197204 rows and 23 columns
-* The data was aquired on **10 JULY 2023**
-* Each row represents a specific animals
-* Each column represents a feature of that animal
-* Prepare data
-
-   
-## Explore data in search of answers
-* Answer the following initial questions
-    * 1. 
-    * 2. 
-    * 3. 
-    * 4. 
+* The data was aquired on `10 July 2023`
+* Two datasets downloaded from data.austintexas.gov: [Intake Dataset](https://data.austintexas.gov/Health-and-Community-Services/Austin-Animal-Center-Intakes/wter-evkm) & [Outcome Dataset](https://data.austintexas.gov/Health-and-Community-Services/Austin-Animal-Center-Outcomes/9t4d-g238)
+* Intake Dataset: 153,077 rows and 12 columns 
+* Outcome Dataset: 153,449 row and 12 columns
+* Each row represents an animal's case
+* Each column represents features of the animal
 
 
 ### Draw conclusions
-* 1.
-* 2. 
-* 3. 
-* 4. 
+* June, July, August, and December had higher volumes
+* Mixed breeds are more likely to be transfered or adopted
+* Fixed animals are far more likely to be adopted
+* Cats are slightly more likely to have an ‘other’ or transfer outcome than dogs
+* Cats and dogs with normal conditions are more likely to be adopted.
 
 ## Data Dictionary
 |Feature   |Datatype| Unit       |Description   |
@@ -95,18 +88,21 @@
 * 4. Run notebook.
 
 ## Takeaways and Conclusions
-1. 
+- Identifed features that have a significant relationship with outcome:
+    * June, July, August, and December had higher volumes
+    * Mixed breeds are more likely to be transfered or adopted
+    * Fixed animals are far more likely to be adopted
+    * Cats are slightly more likely to have an ‘other’ or transfer outcome than dogs
+    * Cats and dogs with normal conditions are more likely to be adopted.
+    
+- Month of outcome, Breed of species, Sex, Species, Condition, Mix_color, Month_Rel:
+    * Each feature had a statistically significant relaitonship with outcome
 
-2. 
-
-3. 
-
-4. 
-
-
+** Year_rel: Showed overall trend and would not be a accurate prediction**
+** Outcome_age: Data integrity issued was raised when we found negative ages**
 
 # Recommendations
-* Provide additional takeaways or downloadable docs for extensively used topics
+
 * We have data governance recommendations:
     - We found tens of thousands of rows with data that was missing and/or had nonsensical information
     * Collect information more information such as: 
@@ -117,4 +113,6 @@
         - Who turned the animal in (e.g. citizen, law enforcement, organization)
 
 # Next Steps
+* If provided more time we would use NLP to review the polarity of the names. 
+* Review other shelters with different features
 
