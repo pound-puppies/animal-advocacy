@@ -144,7 +144,7 @@ def month_outcome(df):
     # Show the legend
     plt.legend()
     # Display the plot
-    plt.show()
+    plt.show(renderer='png') 
     
 
 def sex_viz(train):
@@ -154,8 +154,7 @@ def sex_viz(train):
     grouped_data = train.groupby(['sex', 'outcome']).size().reset_index(name='count')
     fig = px.bar(grouped_data, x='sex', y='count', color='outcome', barmode='group')
     fig.update_layout(title='Sex vs Outcome')  # Update layout to set the title
-    fig.show()        
-
+    fig.show(renderer='png') 
     
 def species_viz(train):
     '''
@@ -164,7 +163,7 @@ def species_viz(train):
     grouped_data = train.groupby(['species', 'outcome']).size().reset_index(name='count')
     fig = px.bar(grouped_data, x='species', y='count', color='outcome', barmode='group')
     fig.update_layout(title='Species vs Outcome')  # Update layout to set the title
-    fig.show()   
+    fig.show(renderer='png')  
     
 def month_viz(train):
     '''
@@ -185,7 +184,7 @@ def breed_viz(train):
     grouped_data = train.groupby(['breed', 'outcome']).size().reset_index(name='count')
     fig = px.bar(grouped_data, x='breed', y='count', color='outcome', barmode='group')
     fig.update_layout(title='Breed vs Outcome')  # Update layout to set the title
-    fig.show()  
+    fig.show(renderer='png') 
 
 def condition_viz(train):
     '''
@@ -194,7 +193,7 @@ def condition_viz(train):
     grouped_data = train.groupby(['condition', 'outcome']).size().reset_index(name='count').sort_values(by="condition", ascending=False)
     fig = px.bar(grouped_data, x='condition', y='count', color='outcome', barmode='group')
     fig.update_layout(title='Cats and Dogs with Normal Conditions Are More Likely to be Adopted')  # Update layout to set the title
-    fig.show()  
+    fig.show(renderer='png')   
                                ####################### Stats Functions ###################
 
 
