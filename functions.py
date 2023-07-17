@@ -176,7 +176,7 @@ def month_viz(train):
     grouped_data.sort_values('rel_month', inplace=True)
     fig = px.bar(grouped_data, x='rel_month', y='count', color='outcome', barmode='group')
     fig.update_layout(title='Month vs Outcome')  # Update layout to set the title
-    fig.show() 
+    fig.show(renderer='png') 
 
 def breed_viz(train):
     '''

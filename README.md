@@ -3,7 +3,7 @@
 ### 10 July 2023
 ## Project description with goals
 ### Description
-* Using the Austin Animal Center data from 2013 to present, our team will create a model to best predict whether an cat or dog will be adopted. The purpose is to give stakeholders (taxpayers, local government) can use the model as a tool to decide where to focus resources to increase adoption rates. The key is early intervention for cats/dogs to increase adoption resources on those with lower rates of adoption. 
+* Using the Austin Animal Center data from 2013 to present, our team will create a model to best predict whether an cat or dog will be adopted. The purpose is to give insight to animal shelters that can use the model as a tool to decide where to focus resources to increase adoption rates. The key is early intervention for cats/dogs to increase adoption resources on those with lower rates of adoption. 
 
 ### Goals¶
 * Discover drivers of outcome
@@ -116,3 +116,4 @@
 * If provided more time we would use NLP to review the polarity of the names. 
 * Review other shelters with different features
 
+s

@@ -18,6 +18,30 @@ np.random.seed(42)
                                                         ############### Acquire Functions ###########################
 
 def left_join_csv(outcomes_file, intakes_file, merged_file):
+    """
+    Left join two CSV files based on a common column 'Animal ID' and save the merged data to a new CSV file.
+
+    Parameters:
+    ----------
+    outcomes_file : str
+        Filepath of the CSV containing outcomes data.
+    
+    intakes_file : str
+        Filepath of the CSV containing intakes data.
+    
+    merged_file : str
+        Filepath where the merged data will be saved.
+
+    Returns:
+    -------
+    pandas.DataFrame
+        The merged DataFrame resulting from the left join of 'outcomes' and 'intakes' DataFrames.
+
+    Example:
+    --------
+    left_join_csv('outcomes.csv', 'intakes.csv', 'merged_data.csv')
+    # This will read 'outcomes.csv' and 'intakes.csv', perform the left join on 'Animal ID', and save the merged data to 'merged_data.csv'.
+    """
     # Read the CSV files
     outcomes = pd.read_csv(outcomes_file)
     intakes = pd.read_csv(intakes_file)
@@ -30,7 +54,6 @@ def left_join_csv(outcomes_file, intakes_file, merged_file):
     
     return merged_data
 
-df = pd.read_csv('merged_data.csv')
 
 
                                                         #################### Prepare Functions ##########################
@@ -117,6 +140,40 @@ def transform_color(df):
     return df
 
 def prep_df(df):
+    """
+    Preprocesses the input DataFrame to prepare it for analysis.
+
+    Parameters:
+        df (DataFrame): The input DataFrame to be preprocessed.
+
+    Returns:
+        df (DataFrame): The preprocessed DataFrame containing relevant data after filtering and transformations.
+        model_df (DataFrame): A model-ready DataFrame, containing one-hot encoded columns for categorical variables.
+
+    Preprocessing Steps:
+    1. Lowercase column names and values in the DataFrame.
+    2. Remove duplicate 'animal id' entries and drop rows with duplicate 'id'.
+    3. Rename certain columns for clarity and consistency.
+    4. Filter 'species' to only return 'dog' or 'cat'.
+    5. Drop rows with missing values in 'outcome', 'intake_type', 'sex', and 'name' columns.
+    6. Replace 'nan' values in 'name' column with 0 and all other names with 1.
+    7. Drop rows with 'wildlife' as the 'intake_type'.
+    8. Convert 'dob', 'outcome_datetime', and 'intake_datetime' columns to the datetime data type.
+    9. Create a new column 'outcome_age' representing the age at the outcome date.
+    10. Create 'rel_month' and 'rel_year' columns from the 'outcome_date'.
+    11. Rename values in the 'outcome' column based on a mapping dictionary and rename remaining values to 'other'.
+    12. Transform 'intake_condition' and 'color' columns using separate functions.
+    13. Update data types for 'name' and 'outcome_age' columns.
+    14. Drop unnecessary columns from the DataFrame.
+    15. Categorize the 'breed' column into 'mix', 'two breeds', and 'single breed'.
+    16. Create dummy variables for categorical columns: 'sex', 'intake_type', 'condition', 'species', 'breed', 'primary_color'.
+    17. Create the model_df by concatenating boolean columns with dummy_df.
+
+    Note:
+    - The 'transform_intake_condition' and 'transform_color' functions are assumed to be defined elsewhere in the code.
+    - The specific transformations for some columns (e.g., 'breed') depend on the data and problem domain.
+    - The returned model_df is suitable for modeling purposes with categorical variables one-hot encoded.
+    """
 # lower cases df
     df.columns = df.columns.str.lower()
     df = df.apply(lambda x: x.astype(str).str.lower())
@@ -262,7 +319,6 @@ def prep_df(df):
     model_df = pd.concat([bool_df, dummy_df], axis=1)
     return df, model_df
 
-df, model_df = prep_df(df)
 
 #This confirms and Validates my split.
 def split_data(df, target_variable):
