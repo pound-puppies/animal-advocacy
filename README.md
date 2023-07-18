@@ -31,6 +31,17 @@
 * Each row represents an animal's case
 * Each column represents features of the animal
 
+## Prepare
+- Two dataframes were created, model_df with encoded variables
+- Altered column names for readability, and convenience
+- Dropped nulls, duplicate ids, species other than cats and dogs
+- Converted data types of various columns to appropriate ones such as 'dates' from string to datetime
+- Columns were renamed
+- Added Features: sex, breed, condition, outcome_age, rel_month, rel_year, primary_color, is_tabby, mix_color 
+- Removed Features: id, name_x, monthyear_x, animal type_x, sex upon intake, age upon outcome, breed_x, color_x, monthyear_y, found location, age upon intake, outcome subtype, intake_datetime, outcome_datetime, outcome_date, intake_date
+- Split data into train, validate and test (approx. 60/20/20), stratifying on 'outcome'
+- Outliers were not adressed as they were part of the target
+
 
 ### Draw conclusions
 * June, July, August, and December had higher volumes
