@@ -6,43 +6,39 @@
 
 <a name ='toc'></a>
 # Table of Contents 
-0. [Domain Context](#domain_context)
-    1. [](#Animal_disc)
-1. [Project Description](#project_Description)
-    1. [Project Objectives](#project_objectives)
-    3. [Deliverables](#deliverables)
-2. [Executive Summary](#exe_sum)
-    1. [Goals](#goals)
-    2. [Findings](#findings)
-3. [Acquire Data](#acquire)
-    1. [Data Dictonary](#data_dict)
-    2. [Acquire Takeaways](#acquire_takeaways)
-4. [Prepare Data](#prep_data)
-    1. [Distributions](#distributions)
-    2. [Prepare Takeaways](#prepare_takeaways)
-5. [Data Exploration](#explore)
-    1. [Explore Takeaways](#explore_takeaways)
-    2. [Hypothesis](#hypothesis)
-6. [Modeling & Evaluation](#modeling)
-    1. [Modeling Takeaways](#model_takeaways)
-7. [Project Delivery](#delivery)
-    1. [Conclusions & Next Steps](#conclusions_next_steps)
-    2. [Project Replication](#replication)
+1. [Project Description with goals](#project_description_with_goals)
+    1. [Project Description](#project_description)
+    2. [Goals](#project_goals)
+    3. [Initial Thoughts](#initial_thoughts)
+    4. [Initial Hypothesis](#initial_hypothesis) 
+2. [Project Plan](#project_plan)
+3. [Prepare](#prepare)
+4. [Drawn Conclusions](#conclusions)
+5. [Data Dicitonary](#conclusions)
+6. [Steps to Reproduce](#steps)
+7. [Takeaways and Conclusions](#takeaways)
+6. [Recommendations](#recommendations)
+7. [Next Steps](#next_steps)
    
 <hr style="border-top: 10px groove tan; margin-top: 5px; margin-bottom: 5px"></hr>
 
-    
+<a name='project_description_with_goals'></a>   
 ## Project description with goals
+
+<a name='project_description'></a>
 ### Description
 * Using the Austin Animal Center data from 2013 to present, our team will create a model to best predict whether an cat or dog will be adopted. The purpose is to give insight to animal shelters that can use the model as a tool to decide where to focus resources to increase adoption rates. The key is early intervention for cats/dogs to increase adoption resources on those with lower rates of adoption. 
 
+<a name='project_goals'></a>
 ### Goals¶
 * Discover drivers of outcome
 * Use drivers of outcomes to develop machine learning models to predict outcomes
 
+<a name='initial_thoughts'></a>
 ### Initial Thoughts
 * Our initial hypothesis is that the drivers of outcome will be breed, age, condition, species, and sex.
 
+<a name='initial_hypothesis'></a>
 ## Initial hypotheses and/or questions you have of the data, ideas
 
 - Is Month Related to Outcome?
@@ -52,6 +48,8 @@
 - Is Condition Related to Outcome
 
 *****************************************
+
+<a name='project_plan'></a>
 ## Project Plan 
 * Data acquired and join were from Austin Animal Center
     * Files were downloaded and converted to dataframes from xls format
@@ -61,6 +59,8 @@
 * Outcome Dataset: 153,449 row and 12 columns
 * Each row represents an animal's case
 * Each column represents features of the animal
+
+<a name='prepare'></a>
 
 ## Prepare
 * Two dataframes were created, model_df with encoded variables
@@ -107,13 +107,16 @@
 * Split data into train, validate and test (approx. 60/20/20), stratifying on 'outcome'
 * Outliers were not adressed as they were part of the target
 
+<a name='conclusions'></a>
 
-### Draw conclusions
+## Draw conclusions
 * June, July, August, and December had higher volumes
 * Mixed breeds are more likely to be transfered or adopted
 * Fixed animals are far more likely to be adopted
 * Cats are slightly more likely to have an ‘other’ or transfer outcome than dogs
 * Cats and dogs with normal conditions are more likely to be adopted.
+
+<a name='dictionary'></a>
 
 ## Data Dictionary
 |Feature   |Datatype| Unit       |Description   |
@@ -157,11 +160,14 @@
 |Breed |Breed of animal|
 |Color |The color of the animal|
 
+<a name='steps'></a>
 ## Steps to Reproduce
 * 1. Clone this repo: git@github.com:pound-puppies/animal-advocacy.git
 * 2. Go to team [Google Drive link here:](https://drive.google.com/drive/folders/1hV0WQezLiQpS06MIc0Kggy8Iq0mdoTLh) 
 * 3. Download austin_animal_intakes.csv and austin_animal_outcomes.csv and put in cloned personal repository
 * 4. Run notebook.
+
+<a name='takeaways'></a>
 
 ## Takeaways and Conclusions
 - Identifed features that have a significant relationship with outcome:
@@ -177,7 +183,9 @@
 ** Year_rel: Showed overall trend and would not be a accurate prediction**
 ** Outcome_age: Data integrity issued was raised when we found negative ages**
 
-# Recommendations
+<a name='recommendations'></a>
+
+## Recommendations
 
 * We have data governance recommendations:
     - We found tens of thousands of rows with data that was missing and/or had nonsensical information
@@ -188,8 +196,8 @@
         - Vaccination status
         - Who turned the animal in (e.g. citizen, law enforcement, organization)
 
-# Next Steps
+<a name='next_steps'></a>
+
+## Next Steps
 * If provided more time we would use NLP to review the polarity of the names. 
 * Review other shelters with different features
-
-s
