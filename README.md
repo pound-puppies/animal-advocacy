@@ -32,15 +32,43 @@
 * Each column represents features of the animal
 
 ## Prepare
-- Two dataframes were created, model_df with encoded variables
-- Altered column names for readability, and convenience
-- Dropped nulls, duplicate ids, species other than cats and dogs
-- Converted data types of various columns to appropriate ones such as 'dates' from string to datetime
-- Columns were renamed
-- Added Features: sex, breed, condition, outcome_age, rel_month, rel_year, primary_color, is_tabby, mix_color 
-- Removed Features: id, name_x, monthyear_x, animal type_x, sex upon intake, age upon outcome, breed_x, color_x, monthyear_y, found location, age upon intake, outcome subtype, intake_datetime, outcome_datetime, outcome_date, intake_date
-- Split data into train, validate and test (approx. 60/20/20), stratifying on 'outcome'
-- Outliers were not adressed as they were part of the target
+* Two dataframes were created, model_df with encoded variables
+* Altered column names for readability, and convenience
+    - We removed spaces and capital letters
+* Dropped nulls, duplicate ids, species other than cats and dogs
+    - 12000 unique animal_id's were repeat offenders/duplicates (had been in the shelter more than once)
+        - Their "intake date" however was input based on the first time they came into the shelter, in every instance of their intake
+            - After discussion we decided to remove all animal_id's that had duplicates
+    - We removed non-cats and non-dogs
+        - We decided to it was impractical to keep animals that were uncommon to have as pets or see in urban settings
+* Converted data types of various columns to appropriate ones such as 'dates' from string to datetime
+* Columns and feature categories were renamed:
+    Renamed Columns:
+        - Our original dataset had intake names, and outcome names for each animal when they'd rarely changed
+            - We decided to keep their intake name column
+        - "Animal type_x" to "species"
+        - monthyear_x, and monthyear_y removed and 2 columns, one for month and one for year were created
+       Feature Changes:
+        - Conditions:
+            - We changed 10 intake conditions to 5, based on what type of care they may need and surviability
+        - Outcome month and year:
+            - We decided after engineering features from our date based columns to only keep outcome month, year (both noted as rel_month, and rel_year), and age 
+        - Breed:
+            - Changed to "mix", "two_breeds", and "pure_breed"
+                - There were 2200 
+* Engineered Features: breedoutcome_age, primary_color, is_tabby, mix_color
+    - Outcome age was more important to us than the animals intake age, since we care primarily about what effects OUTCOMES for the animal
+    - Primary color, is_tabby, and mix_color columns allowed to more easily boolean the feature than to have 4000 different colors
+* Removed Features below: 
+    - id - After removing all duplicates, no longer added value
+    - name_x - names never/rarely changed
+    - monthyear_x - after calculating age of outcome tenure_days (length of stay), decided it was unnecessary
+    - sex upon intake - sex upon outcome was more appropriate
+    - found location - we deemed this an unnecessary feature for our model
+    - outcome subtype - only several hundred rows had outcome subtypes, we removed it 
+    - intake_datetime - after calculating age at outcome, tenure_days (length of stay), decided it was unnecessary 
+* Split data into train, validate and test (approx. 60/20/20), stratifying on 'outcome'
+* Outliers were not adressed as they were part of the target
 
 
 ### Draw conclusions
