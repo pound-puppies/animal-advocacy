@@ -33,6 +33,9 @@
 ### Goals¶
 * Discover drivers of outcome
 * Use drivers of outcomes to develop machine learning models to predict outcomes
+* Identify Animals who are not likely to be adopted
+* Provide data based solutions to reduce outcomes of "other"
+* Present our options to our stakeholders
 
 <a name='initial_thoughts'></a>
 ### Initial Thoughts
