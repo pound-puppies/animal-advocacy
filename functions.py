@@ -147,13 +147,10 @@ def month_outcome(df):
     # Display the plot
     plt.show(renderer='png') 
     
-
-    
 def month_viz(train, target):
     '''
     This function pulls in a chart comparing sex and outcome using plotly express
     '''
-    sns.set_palette("Pastel1")
     month_order = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
     train['rel_month'] = pd.Categorical(train['rel_month'], categories=month_order, ordered=True)
     grouped_data = train.groupby(['rel_month', 'outcome']).size().reset_index(name='count')
@@ -258,6 +255,65 @@ def px_viz(train, feature, target, ax_name, title_name):
 
 
             
+    fig.show(renderer='png')
+
+def px_num_viz(train, feature, target, title_name, ax_name=None, tick_labels=None):
+    '''
+    This function pulls in a chart comparing sex and outcome using plotly express
+    '''
+    # Calculate the count of each outcome within each species category
+    grouped_data = train.groupby([feature, target]).size().reset_index(name='count')
+
+    # Calculate the total count for each species category to get percentages
+    species_total_counts = grouped_data.groupby(feature)['count'].transform('sum')
+    grouped_data['percentage'] = grouped_data['count'] / species_total_counts * 100
+
+    # Calculate the overall percentage of adoption & transfer line
+    overall_adoption_percentage = train[train[target] == 'adoption'].shape[0] / train.shape[0] * 100
+    overall_transfer_percentage = train[train[target] == 'transfer'].shape[0] / train.shape[0] * 100
+    overall_other_percentage = train[train[target] == 'other'].shape[0] / train.shape[0] * 100
+
+    # Create the stacked bar chart
+    fig = px.bar(grouped_data, x=feature, y='percentage', color=target, barmode='group',
+                 labels={'percentage': 'Total Percentage (%)'})
+
+    #Add the average line for overall adoption percentage
+    fig.add_hline(y=overall_adoption_percentage, line_dash='dash', line_color='blue',
+                  annotation_text=f'Avg. Adoption ({overall_adoption_percentage:.2f}%)',
+                  annotation_position='top right')
+
+    # Add the average line for overall transferred percentage
+    fig.add_hline(y=overall_transfer_percentage, line_dash='dash', line_color='green',
+                  annotation_text=f'Avg. Transferred ({overall_transfer_percentage:.2f}%)',
+                  annotation_position='top right')
+    
+    # Add the average line for overall other percentage
+    fig.add_hline(y=overall_other_percentage, line_dash='dash', line_color='red',
+                  annotation_text=f'Avg. Other ({overall_other_percentage:.2f}%)',
+                  annotation_position='top right')
+    # Set x-axis title
+    fig.update_xaxes(title_text=ax_name)
+    fig.update_layout(title=title_name)  # Update layout to set the title
+    
+    if tick_labels is not None:
+        # Use custom tick labels if provided
+        fig.update_layout(xaxis=dict(tickvals=list(range(len(tick_labels))), ticktext=tick_labels))
+    else:
+        # Hide x-axis tick labels
+        fig.update_xaxes(showticklabels=False)
+
+    # Update legend labels
+    for trace in fig.data:
+        if 'name' in trace:
+            trace['name'] = str(trace['name']).capitalize()
+    
+    # Add invisible dummy traces to the plot for the legend
+    fig.add_trace(go.Scatter(x=[None], y=[None], mode='lines', line=dict(color='blue', dash='dash'), name='Avg. Adoption'))
+    fig.add_trace(go.Scatter(x=[None], y=[None], mode='lines', line=dict(color='green', dash='dash'), name='Avg. Transferred'))
+    fig.add_trace(go.Scatter(x=[None], y=[None], mode='lines', line=dict(color='red', dash='dash'), name='Avg. Other'))
+    # Capitalize words in the legend box titles
+    fig.update_layout(legend_title_text='Outcome')
+
     fig.show(renderer='png') 
                                ####################### Stats Functions ###################
 
