@@ -1,6 +1,37 @@
 # Animal-Advocacy-Project
 ### Brian O'Neil, Scott Barnett, Keila Camarillo, and Esayas Asefa
 ### 10 July 2023
+
+<center><h1>Animal Advocacy</center>
+
+<a name ='toc'></a>
+# Table of Contents 
+0. [Domain Context](#domain_context)
+    1. [](#Animal_disc)
+1. [Project Description](#project_Description)
+    1. [Project Objectives](#project_objectives)
+    3. [Deliverables](#deliverables)
+2. [Executive Summary](#exe_sum)
+    1. [Goals](#goals)
+    2. [Findings](#findings)
+3. [Acquire Data](#acquire)
+    1. [Data Dictonary](#data_dict)
+    2. [Acquire Takeaways](#acquire_takeaways)
+4. [Prepare Data](#prep_data)
+    1. [Distributions](#distributions)
+    2. [Prepare Takeaways](#prepare_takeaways)
+5. [Data Exploration](#explore)
+    1. [Explore Takeaways](#explore_takeaways)
+    2. [Hypothesis](#hypothesis)
+6. [Modeling & Evaluation](#modeling)
+    1. [Modeling Takeaways](#model_takeaways)
+7. [Project Delivery](#delivery)
+    1. [Conclusions & Next Steps](#conclusions_next_steps)
+    2. [Project Replication](#replication)
+   
+<hr style="border-top: 10px groove tan; margin-top: 5px; margin-bottom: 5px"></hr>
+
+    
 ## Project description with goals
 ### Description
 * Using the Austin Animal Center data from 2013 to present, our team will create a model to best predict whether an cat or dog will be adopted. The purpose is to give insight to animal shelters that can use the model as a tool to decide where to focus resources to increase adoption rates. The key is early intervention for cats/dogs to increase adoption resources on those with lower rates of adoption. 
@@ -44,19 +75,25 @@
 * Converted data types of various columns to appropriate ones such as 'dates' from string to datetime
 * Columns and feature categories were renamed:
     Renamed Columns:
+        - "outcome_type" was renamed to "outcome" (target variable)
         - Our original dataset had intake names, and outcome names for each animal when they'd rarely changed
             - We decided to keep their intake name column
         - "Animal type_x" to "species"
         - monthyear_x, and monthyear_y removed and 2 columns, one for month and one for year were created
        Feature Changes:
         - Conditions:
-            - We changed 10 intake conditions to 5, based on what type of care they may need and surviability
+            - We changed 10 intake conditions to 6, based on what type of care they may need and survivability
         - Outcome month and year:
             - We decided after engineering features from our date based columns to only keep outcome month, year (both noted as rel_month, and rel_year), and age 
         - Breed:
             - Changed to "mix", "two_breeds", and "pure_breed"
                 - There were 2200 
-* Engineered Features: breedoutcome_age, primary_color, is_tabby, mix_color
+        - Outcome was changed from 
+* Engineered Features: outcome, breed, outcome_age, primary_color, is_tabby, mix_color
+    - Outcome was changed from 10 different outcomes to 3
+        - If animals were placed in a home, they were categorized as "Adopt"
+        - If animals were transfered to another facility they were categorized as "Transfer"
+        - If animals had any other outcome they were categorized as "Other"
     - Outcome age was more important to us than the animals intake age, since we care primarily about what effects OUTCOMES for the animal
     - Primary color, is_tabby, and mix_color columns allowed to more easily boolean the feature than to have 4000 different colors
 * Removed Features below: 
@@ -66,7 +103,7 @@
     - sex upon intake - sex upon outcome was more appropriate
     - found location - we deemed this an unnecessary feature for our model
     - outcome subtype - only several hundred rows had outcome subtypes, we removed it 
-    - intake_datetime - after calculating age at outcome, tenure_days (length of stay), decided it was unnecessary 
+    - intake_datetime - after calculating age at outcome, tenure_days (length of stay), and found it to be unreliable in thousands of rows since we were getting negative tenure days
 * Split data into train, validate and test (approx. 60/20/20), stratifying on 'outcome'
 * Outliers were not adressed as they were part of the target
 
