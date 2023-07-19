@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 import seaborn as sns
 import plotly.express as px
+import plotly.graph_objects as go
 
 #scaling
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
@@ -147,53 +148,117 @@ def month_outcome(df):
     plt.show(renderer='png') 
     
 
-def sex_viz(train):
-    '''
-    This function pulls in a chart comparing sex and outcome using plotly express
-    '''
-    grouped_data = train.groupby(['sex', 'outcome']).size().reset_index(name='count')
-    fig = px.bar(grouped_data, x='sex', y='count', color='outcome', barmode='group')
-    fig.update_layout(title='Sex vs Outcome')  # Update layout to set the title
-    fig.show(renderer='png') 
     
-def species_viz(train):
+def month_viz(train, target):
     '''
     This function pulls in a chart comparing sex and outcome using plotly express
     '''
-    grouped_data = train.groupby(['species', 'outcome']).size().reset_index(name='count')
-    fig = px.bar(grouped_data, x='species', y='count', color='outcome', barmode='group')
-    fig.update_layout(title='Species vs Outcome')  # Update layout to set the title
-    fig.show(renderer='png')  
-    
-def month_viz(train):
-    '''
-    This function pulls in a chart comparing sex and outcome using plotly express
-    '''
+    sns.set_palette("Pastel1")
     month_order = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
     train['rel_month'] = pd.Categorical(train['rel_month'], categories=month_order, ordered=True)
     grouped_data = train.groupby(['rel_month', 'outcome']).size().reset_index(name='count')
     grouped_data.sort_values('rel_month', inplace=True)
     fig = px.bar(grouped_data, x='rel_month', y='count', color='outcome', barmode='group')
-    fig.update_layout(title='Month vs Outcome')  # Update layout to set the title
-    fig.show(renderer='png') 
+        # Calculate the total count for each 'rel_month' category
+    total_counts = grouped_data.groupby('rel_month')['count'].transform('sum')
 
-def breed_viz(train):
+    # Calculate the percentage of each 'outcome' category within each 'rel_month' category
+    grouped_data['percentage'] = grouped_data['count'] / total_counts * 100
+
+    # Create the stacked bar chart with percentages
+    fig = px.bar(grouped_data, x='rel_month', y='percentage', color='outcome', barmode='group',
+                 labels={'percentage': 'Total Percentage (%)'})
+
+    # Set x-axis title
+    fig.update_xaxes(title_text='Month')
+    # Calculate the overall percentage of adoption & transfer line
+    overall_adoption_percentage = train[train[target] == 'adoption'].shape[0] / train.shape[0] * 100
+    overall_transfer_percentage = train[train[target] == 'transfer'].shape[0] / train.shape[0] * 100
+    overall_other_percentage = train[train[target] == 'other'].shape[0] / train.shape[0] * 100
+    
+    #Add the average line for overall adoption percentage
+    fig.add_hline(y=overall_adoption_percentage, line_dash='dash', line_color='blue',
+                  annotation_text=f'Avg. Adoption ({overall_adoption_percentage:.2f}%)',
+                  annotation_position='top right')
+
+    # Add the average line for overall transferred percentage
+    fig.add_hline(y=overall_transfer_percentage, line_dash='dash', line_color='green',
+                  annotation_text=f'Avg. Transferred ({overall_transfer_percentage:.2f}%)',
+                  annotation_position='top right')
+    # Add the average line for overall other percentage
+    fig.add_hline(y=overall_other_percentage, line_dash='dash', line_color='red',
+                  annotation_text=f'Avg. Other ({overall_other_percentage:.2f}%)',
+                  annotation_position='top right')
+    # Set x-axis title
+    fig.update_xaxes(title_text="Month")
+  # Update layout to set the title
+    # Update legend labels
+    for trace in fig.data:
+        if 'name' in trace:
+            trace['name'] = str(trace['name']).capitalize()
+        # Add invisible dummy traces to the plot for the legend
+    fig.add_trace(go.Scatter(x=[None], y=[None], mode='lines', line=dict(color='blue', dash='dash'), name='Avg. Adoption'))
+    fig.add_trace(go.Scatter(x=[None], y=[None], mode='lines', line=dict(color='green', dash='dash'), name='Avg. Transferred'))
+    fig.add_trace(go.Scatter(x=[None], y=[None], mode='lines', line=dict(color='red', dash='dash'), name='Avg. Other'))
+    # Capitalize words in the legend box titles
+    fig.update_layout(legend_title_text='Outcome')
+    fig.update_layout(title='Winter Has More Adoptions')  # Update layout to set the title
+    fig.show(renderer='png')
+    
+
+def px_viz(train, feature, target, ax_name, title_name):
     '''
     This function pulls in a chart comparing sex and outcome using plotly express
     '''
-    grouped_data = train.groupby(['breed', 'outcome']).size().reset_index(name='count')
-    fig = px.bar(grouped_data, x='breed', y='count', color='outcome', barmode='group')
-    fig.update_layout(title='Breed vs Outcome')  # Update layout to set the title
-    fig.show(renderer='png') 
+    # Calculate the count of each outcome within each species category
+    grouped_data = train.groupby([feature, target]).size().reset_index(name='count')
 
-def condition_viz(train):
-    '''
-    This function pulls in a chart comparing condition and outcome using plotly express
-    '''
-    grouped_data = train.groupby(['condition', 'outcome']).size().reset_index(name='count').sort_values(by="condition", ascending=False)
-    fig = px.bar(grouped_data, x='condition', y='count', color='outcome', barmode='group')
-    fig.update_layout(title='Cats and Dogs with Normal Conditions Are More Likely to be Adopted')  # Update layout to set the title
-    fig.show(renderer='png')   
+    # Calculate the total count for each species category to get percentages
+    species_total_counts = grouped_data.groupby(feature)['count'].transform('sum')
+    grouped_data['percentage'] = grouped_data['count'] / species_total_counts * 100
+
+    # Calculate the overall percentage of adoption & transfer line
+    overall_adoption_percentage = train[train[target] == 'adoption'].shape[0] / train.shape[0] * 100
+    overall_transfer_percentage = train[train[target] == 'transfer'].shape[0] / train.shape[0] * 100
+    overall_other_percentage = train[train[target] == 'other'].shape[0] / train.shape[0] * 100
+    
+    # Convert  column to uppercase
+    grouped_data[feature] = grouped_data[feature].str.capitalize()
+
+    # Create the stacked bar chart
+    fig = px.bar(grouped_data, x=feature, y='percentage', color=target, barmode='group',
+                 labels={'percentage': 'Total Percentage (%)'})
+
+    #Add the average line for overall adoption percentage
+    fig.add_hline(y=overall_adoption_percentage, line_dash='dash', line_color='blue',
+                  annotation_text=f'Avg. Adoption ({overall_adoption_percentage:.2f}%)',
+                  annotation_position='top left')
+
+    # Add the average line for overall transferred percentage
+    fig.add_hline(y=overall_transfer_percentage, line_dash='dash', line_color='green',
+                  annotation_text=f'Avg. Transferred ({overall_transfer_percentage:.2f}%)',
+                  annotation_position='top left')
+    # Add the average line for overall other percentage
+    fig.add_hline(y=overall_other_percentage, line_dash='dash', line_color='red',
+                  annotation_text=f'Avg. Other ({overall_other_percentage:.2f}%)',
+                  annotation_position='top left')
+    # Set x-axis title
+    fig.update_xaxes(title_text=ax_name)
+    fig.update_layout(title=title_name)  # Update layout to set the title
+    # Update legend labels
+    for trace in fig.data:
+        if 'name' in trace:
+            trace['name'] = str(trace['name']).capitalize()
+        # Add invisible dummy traces to the plot for the legend
+    fig.add_trace(go.Scatter(x=[None], y=[None], mode='lines', line=dict(color='blue', dash='dash'), name='Avg. Adoption'))
+    fig.add_trace(go.Scatter(x=[None], y=[None], mode='lines', line=dict(color='green', dash='dash'), name='Avg. Transferred'))
+    fig.add_trace(go.Scatter(x=[None], y=[None], mode='lines', line=dict(color='red', dash='dash'), name='Avg. Other'))
+    # Capitalize words in the legend box titles
+    fig.update_layout(legend_title_text='Outcome')
+
+
+            
+    fig.show(renderer='png') 
                                ####################### Stats Functions ###################
 
 
@@ -257,13 +322,15 @@ Pearson's r: {r:2f}
 P-value: {p}""")
     
 
-def sex_stats(train):
+
+
+def chi_stats(train, feature, target):
     '''
-    This function runs a chi2 stats test on sex and outcome.
+    This function runs a chi2 stats test on feature and target variable.
     It returns the contingency table and results in a pandas DataFrame.
     '''
     # Create a contingency table
-    contingency_table = pd.crosstab(train['sex'], train['outcome'])
+    contingency_table = pd.crosstab(train[feature], train[target])
 
     # Perform the chi-square test
     chi2, p_value, dof, expected = stats.chi2_contingency(contingency_table)
@@ -271,112 +338,24 @@ def sex_stats(train):
     # Create a DataFrame for the contingency table
     contingency_sex = pd.DataFrame(contingency_table)
 
+    # Decide whether to reject the null hypothesis
+    alpha = 0.05
+    if p_value == alpha:
+        decision = "Fail to Reject Null Hypothesis"
+    else:
+        decision = "Reject Null Hypothesis"
+
     # Create a DataFrame for the results
     results = pd.DataFrame({
         'Chi-square statistic': [chi2],
-        'p-value': [p_value],
-        'Degrees of freedom': [dof]
+        'p-value': [p_value], 
+        'Decision': [decision]
     })
 
     # Return the contingency table and results DataFrame
     return results
 
-    
-def breed_stats(train):
-    '''
-    This function runs a chi2 stats test on sex and outcome.
-    It returns the contingency table and results in a pandas DataFrame.
-    '''
-    # Create a contingency table
-    contingency_table = pd.crosstab(train['breed'], train['outcome'])
 
-    # Perform the chi-square test
-    chi2, p_value, dof, expected = stats.chi2_contingency(contingency_table)
-
-    # Create a DataFrame for the contingency table
-    contingency_sex = pd.DataFrame(contingency_table)
-
-    # Create a DataFrame for the results
-    results = pd.DataFrame({
-        'Chi-square statistic': [chi2],
-        'p-value': [p_value],
-        'Degrees of freedom': [dof]
-    })
-
-    # Return the contingency table and results DataFrame
-    return results
-
-def species_stats(train):
-    '''
-    This function runs a chi2 stats test on sex and outcome.
-    It returns the contingency table and results in a pandas DataFrame.
-    '''
-    # Create a contingency table
-    contingency_table = pd.crosstab(train['species'], train['outcome'])
-
-    # Perform the chi-square test
-    chi2, p_value, dof, expected = stats.chi2_contingency(contingency_table)
-
-    # Create a DataFrame for the contingency table
-    contingency_sex = pd.DataFrame(contingency_table)
-
-    # Create a DataFrame for the results
-    results = pd.DataFrame({
-        'Chi-square statistic': [chi2],
-        'p-value': [p_value],
-        'Degrees of freedom': [dof]
-    })
-
-    # Return the contingency table and results DataFrame
-    return results
-
-def month_stats(train):
-    '''
-    This function runs a chi2 stats test on sex and outcome.
-    It returns the contingency table and results in a pandas DataFrame.
-    '''
-    # Create a contingency table
-    contingency_table = pd.crosstab(train['rel_month'], train['outcome'])
-
-    # Perform the chi-square test
-    chi2, p_value, dof, expected = stats.chi2_contingency(contingency_table)
-
-    # Create a DataFrame for the contingency table
-    contingency_sex = pd.DataFrame(contingency_table)
-
-    # Create a DataFrame for the results
-    results = pd.DataFrame({
-        'Chi-square statistic': [chi2],
-        'p-value': [p_value],
-        'Degrees of freedom': [dof]
-    })
-
-    # Return the contingency table and results DataFrame
-    return results
-
-def condition_stats(train):
-    '''
-    This function runs a chi2 stats test on condition and outcome.
-    It returns the contingency table and results in a pandas DataFrame.
-    '''
-    # Create a contingency table
-    contingency_table = pd.crosstab(train['condition'], train['outcome'])
-
-    # Perform the chi-square test
-    chi2, p_value, dof, expected = stats.chi2_contingency(contingency_table)
-
-    # Create a DataFrame for the contingency table
-    contingency_sex = pd.DataFrame(contingency_table)
-
-    # Create a DataFrame for the results
-    results = pd.DataFrame({
-        'Chi-square statistic': [chi2],
-        'p-value': [p_value],
-        'Degrees of freedom': [dof]
-    })
-
-    # Return the contingency table and results DataFrame
-    return results
                                                             ###################### Modeling Functions ##################
         
 
@@ -394,19 +373,19 @@ def get_baseline(y_train):
     return baseline_df 
 
 #creating X,y
-def get_xy(model_df):
+def get_xy(df, target):
     '''
     This function generates X and y for train, validate, and test to use : X_train, y_train, X_validate, y_validate, X_test, y_test = get_xy()
 
     '''
-    train, validate, test = w.split_data(model_df,'outcome')
+    train, validate, test = w.split_data(df,target)
 
-    X_train = train.drop(['outcome'], axis=1)
-    y_train = train.outcome
-    X_validate = validate.drop(['outcome'], axis=1)
-    y_validate = validate.outcome
-    X_test = test.drop(['outcome'], axis=1)
-    y_test = test.outcome
+    X_train = train.drop([target], axis=1)
+    y_train = train[target]
+    X_validate = validate.drop([target], axis=1)
+    y_validate = validate[target]
+    X_test = test.drop([target], axis=1)
+    y_test = test[target]
     return X_train,y_train,X_validate,y_validate,X_test,y_test
 
 
@@ -462,16 +441,14 @@ def get_models(X_train, y_train, X_validate, y_validate):
         
         # calculate training accuracy, recall, and precision
         train_accuracy = accuracy_score(y_train, train_predictions)
-        # train_recall = recall_score(y_train, train_predictions, average='weighted')
-        # train_precision = precision_score(y_train, train_predictions, average='weighted')
+
         
         # make predictions with the validation data
         val_predictions = model.predict(X_validate)
         
         # calculate validation accuracy, recall, and precision
         val_accuracy = accuracy_score(y_validate, val_predictions)
-        # val_recall = recall_score(y_validate, val_predictions, average='weighted')
-        # val_precision = precision_score(y_validate, val_predictions, average='weighted')
+
         
         # append results to dataframe
         results = results.append({'model': name, 'set': 'train', 'accuracy': train_accuracy}, ignore_index=True)
@@ -518,9 +495,7 @@ def run_gradient_boost(X_train, y_train, X_test, y_test):
     results = pd.DataFrame({
         'model': ['gradient_boosting'],
         'set': ['test'],
-        'accuracy': [test_accuracy],
-        'recall': [test_recall],
-        'precision': [test_precision]
+        'accuracy': [test_accuracy]
     })
 
     return results
