@@ -16,9 +16,10 @@
 4. [Drawn Conclusions](#conclusions)
 5. [Data Dicitonary](#conclusions)
 6. [Steps to Reproduce](#steps)
-7. [Takeaways and Conclusions](#takeaways)
-6. [Recommendations](#recommendations)
-7. [Next Steps](#next_steps)
+7. [Exploration Summary](#exploration)
+8. [Takeaways and Conclusions](#takeaways)
+9. [Recommendations](#recommendations)
+10. [Next Steps](#next_steps)
    
 <hr style="border-top: 10px groove tan; margin-top: 5px; margin-bottom: 5px"></hr>
 
@@ -81,17 +82,16 @@
         - "outcome_type" was renamed to "outcome" (target variable)
         - Our original dataset had intake names, and outcome names for each animal when they'd rarely changed
             - We decided to keep their intake name column
-        - "Animal type_x" to "species"
-        - monthyear_x, and monthyear_y removed and 2 columns, one for month and one for year were created
+            - "Animal type_x" to "species"
+            - monthyear_x, and monthyear_y removed and 2 columns, one for month and one for year were created
        Feature Changes:
-        - Conditions:
-            - We changed 10 intake conditions to 6, based on what type of care they may need and survivability
-        - Outcome month and year:
-            - We decided after engineering features from our date based columns to only keep outcome month, year (both noted as rel_month, and rel_year), and age 
-        - Breed:
-            - Changed to "mix", "two_breeds", and "pure_breed"
-                - There were 2200 
-        - Outcome was changed from 
+           - Conditions:
+               - We changed 10 intake conditions to 6, based on what type of care they may need and survivability
+                   - Outcome month and year:
+                       - We decided after engineering features from our date based columns to only keep outcome month, year (both noted as rel_month, and rel_year), and age 
+           - Breed:
+               - Changed to "mix", "two_breeds", and "pure_breed"
+                   - There were 2200
 * Engineered Features: outcome, breed, outcome_age, primary_color, is_tabby, mix_color
     - Outcome was changed from 10 different outcomes to 3
         - If animals were placed in a home, they were categorized as "Adopt"
@@ -138,13 +138,35 @@
 |Is_tabby | int64 | 0 or 1 | If the animal has a tabby pattern|
 |Mix_color | int64 | 0 or 1 | If the animal has mixed colors|
 
-
 <a name='steps'></a>
 ## Steps to Reproduce
 * 1. Clone this repo: git@github.com:pound-puppies/animal-advocacy.git
 * 2. Go to team [Google Drive link here:](https://drive.google.com/drive/folders/1hV0WQezLiQpS06MIc0Kggy8Iq0mdoTLh) 
 * 3. Download austin_animal_intakes.csv and austin_animal_outcomes.csv and put in cloned personal repository
 * 4. Run notebook.
+
+<a name='exploration'></a>
+## Exploration Summary
+- Identifed features that have a significant relationship with outcome:
+    * rel_month:
+        * Dogs are adopted more in December, January, February, and March and less in April, May, June, September, October, and November.
+        * Cats are adopted more in December, January, February, July, and August and less in March, April, May, June, September, and October.
+    * breeds: Mixed breeds are more likely to be transfered or adopted
+    * sex: Fixed animals are far more likely to be adopted
+    * species: Among dogs a higher percentage were adopted compared to cats
+    * intake_type:
+        * Cats and dogs that came in as abandoned, owner surrender, or public assist are more likely to be adopted.
+        * Cats and dogs that came in as stray are less likely to be adopted
+    * condition: Cats and dogs with normal conditions are more likely to be adopted.
+    * mix_color: Cats and dogs with single-colored coats are more likely to be transferred
+    * primary_color:
+        * Dog's with the primary color gray and red are more likely to be adopted
+        * Cat's with the primary color agouti, lynx point, and red are more likely to be adopted
+- Features that will not be continuing to modeling:
+    * Year_rel: Showed overall trend and would not be a accurate prediction
+    * Dob: Data integrity issued was raised when we found negative ages
+    * Outcome_age: Data integrity issued was raised when we found negative ages
+    * Is_tabby: No statisical significance
 
 <a name='takeaways'></a>
 ## Takeaways and Conclusions
