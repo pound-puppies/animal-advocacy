@@ -147,7 +147,7 @@ def month_outcome(df):
     # Display the plot
     plt.show(renderer='png') 
     
-def month_viz(train, target):
+def month_viz(train, target, title_name):
     '''
     This function pulls in a chart comparing sex and outcome using plotly express
     '''
@@ -174,18 +174,12 @@ def month_viz(train, target):
     overall_other_percentage = train[train[target] == 'other'].shape[0] / train.shape[0] * 100
     
     #Add the average line for overall adoption percentage
-    fig.add_hline(y=overall_adoption_percentage, line_dash='dash', line_color='blue',
-                  annotation_text=f'Avg. Adoption ({overall_adoption_percentage:.2f}%)',
-                  annotation_position='top right')
+    fig.add_hline(y=overall_adoption_percentage, line_dash='dash', line_color='blue')
 
     # Add the average line for overall transferred percentage
-    fig.add_hline(y=overall_transfer_percentage, line_dash='dash', line_color='green',
-                  annotation_text=f'Avg. Transferred ({overall_transfer_percentage:.2f}%)',
-                  annotation_position='top right')
+    fig.add_hline(y=overall_transfer_percentage, line_dash='dash', line_color='green')
     # Add the average line for overall other percentage
-    fig.add_hline(y=overall_other_percentage, line_dash='dash', line_color='red',
-                  annotation_text=f'Avg. Other ({overall_other_percentage:.2f}%)',
-                  annotation_position='top right')
+    fig.add_hline(y=overall_other_percentage, line_dash='dash', line_color='red')
     # Set x-axis title
     fig.update_xaxes(title_text="Month")
   # Update layout to set the title
@@ -199,7 +193,7 @@ def month_viz(train, target):
     fig.add_trace(go.Scatter(x=[None], y=[None], mode='lines', line=dict(color='red', dash='dash'), name='Avg. Other'))
     # Capitalize words in the legend box titles
     fig.update_layout(legend_title_text='Outcome')
-    fig.update_layout(title='Winter Has More Adoptions')  # Update layout to set the title
+    fig.update_layout(title=title_name)  # Update layout to set the title
     fig.show(renderer='png')
     
 
@@ -550,6 +544,48 @@ def run_gradient_boost(X_train, y_train, X_test, y_test):
     # Create a results DataFrame
     results = pd.DataFrame({
         'model': ['gradient_boosting'],
+        'set': ['test'],
+        'accuracy': [test_accuracy]
+    })
+
+    return results
+
+def run_support_vector(X_train, y_train, X_test, y_test):
+    """
+    Trains a Gradient Boosting Classifier on the given training data (X_train, y_train),
+    makes predictions on the test data (X_test), and calculates accuracy, recall, and precision
+    on the test set.
+
+    Parameters:
+        X_train (array-like): Training data features.
+        y_train (array-like): Training data target labels.
+        X_test (array-like): Test data features.
+        y_test (array-like): Test data target labels.
+
+    Returns:
+        pandas.DataFrame: A DataFrame containing the results of the model evaluation on the test set.
+                          The DataFrame has the following columns:
+                          - 'model': Name of the model used ('gradient_boosting').
+                          - 'set': Indicates the data set evaluated ('test').
+                          - 'accuracy': Accuracy score on the test set.
+                          - 'recall': Weighted recall score on the test set.
+                          - 'precision': Weighted precision score on the test set.
+    """
+    # Create and fit the Gradient Boosting model
+    model = SVC(random_state=123)
+    model.fit(X_train, y_train)
+
+    # Make predictions on the test set
+    test_predictions = model.predict(X_test)
+
+    # Calculate accuracy, recall, and precision on the test set
+    test_accuracy = accuracy_score(y_test, test_predictions)
+#     test_recall = recall_score(y_test, test_predictions, average='weighted')
+#     test_precision = precision_score(y_test, test_predictions, average='weighted')
+
+    # Create a results DataFrame
+    results = pd.DataFrame({
+        'model': ['support_vector'],
         'set': ['test'],
         'accuracy': [test_accuracy]
     })

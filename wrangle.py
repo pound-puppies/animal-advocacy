@@ -317,6 +317,12 @@ def prep_df(df):
     
     bool_df = df[['outcome','name', 'is_tabby', 'mix_color']]
     model_df = pd.concat([bool_df, dummy_df], axis=1)
+    model_df = model_df.drop(columns=["is_tabby",'primary_color_brown', 'primary_color_buff', 'primary_color_fawn',
+       'primary_color_gold', 'primary_color_lilac point','primary_color_orange', 
+       'primary_color_sable', 'primary_color_seal point', 'primary_color_tan',
+       'primary_color_tricolor', 'primary_color_white', 'intake_type_owner surrender', 'intake_type_stray'])
+    # update outcome column to change transfer and other into one and list it as other
+    model_df.loc[~model_df['outcome'].isin(['adoption']), 'outcome'] = 'other'
     return df, model_df
 
 
