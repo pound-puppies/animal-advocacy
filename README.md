@@ -2,7 +2,6 @@
 
 <center><h1>Animal Advocacy</center>
 
-### Brian O'Neil, Scott Barnett, Keila Camarillo, and Esayas Asefa
 ### 10 July 2023
 
 <a name ='toc'></a>
