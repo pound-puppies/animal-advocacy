@@ -1,4 +1,7 @@
-# Animal-Advocacy-Project
+![Banner](animal-advocacy/dogs.jpg)
+
+<center><h1>Animal-Advocacy-Project</center>
+
 ### Brian O'Neil, Scott Barnett, Keila Camarillo, and Esayas Asefa
 ### 10 July 2023
 
@@ -111,7 +114,6 @@
 * Outliers were not adressed as they were part of the target
 
 <a name='conclusions'></a>
-
 ## Draw conclusions
 * June, July, August, and December had higher volumes
 * Mixed breeds are more likely to be transfered or adopted
