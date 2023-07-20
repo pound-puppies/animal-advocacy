@@ -163,19 +163,55 @@
 
 <a name='recommendations'></a>
 
-## Recommendations
+### Recommendations
+* During the high adoptions months promote cats, mixed breeds, more by reducing adoption costs, adding stories and character traits.
 
-* We have data governance recommendations:
+* Data governance recommendations:
     - We found tens of thousands of rows with data that was missing and/or had nonsensical information
-    * Collect information more information such as: 
-        - Incidents (e.g. biting, abuse hx) 
-        - Stated reason for return 
-        - Reasons for turn in by owners
-        - Vaccination status
-        - Who turned the animal in (e.g. citizen, law enforcement, organization)
+        * Collect more information such as: 
+            - Incidents (e.g. biting, abuse hx) 
+            - Stated reason for return 
+            - Reasons for turn in by owners
+            - Vaccination status
+            - Who turned the animal in (e.g. citizen, law enforcement, organization)
+            - Microchipped
+     - Create a database for all animals that are ownded
+         * Allow for anyone in the city to register their animals with us whether they are being dropped off or not
+         * Collect data on those animals
+             * Demographic information
+             * Microchip
+             * Health conditions
+ * Business recommendations:
+     - Organize special adoption events and campaigns during the months when dogs and cats are adopted less frequently.
+         * Focus on promoting the benefits of adopting during these months, highlighting the joy of having a new furry friend for the upcoming year.
+         * Put special emphasis on cats and dogs with single color coats
+    - Promotional/Marketing Materials:
+        * Highlight the unique qualities and/or advantages of owning:
+            - Mixed-breed animals
+             - Cats
+         * Educating the public about:
+             - Responsible pet ownership
+                 * The importance of spaying and neutering their pets
+                 * Leashes
+                 * Microchips
+                 * Collaring
+                 * Properly securing the animal on their property
+             - General benefits of owning a pet
+             - The adoption pipeline,
+                 * Positive stories
+                 * The potential for negative outcomes and stories
+                 * Emphasis on stray animals, cause and outcomes
+    - Identify any points of friction for the adoption process and smoothen the process, provide support and education along the lifecycle of the animal
+    - Partner with local business that would be willing to:
+        * Host social events for people who adopted animals from our shelter
+        * Allow us to use their store fronts
+        * Provide discounts for our customers for a certain period of time if they registered their animal
+        * provide discounts for collars, vaccines, microchips, and neutering/spaying for animals purchased, and registered with our shelter
+
 
 <a name='next_steps'></a>
 
-## Next Steps
+### Next Steps
 * If provided more time we would use NLP to review the polarity of the names. 
 * Review other shelters with different features
+* Research the cause of stray animals
