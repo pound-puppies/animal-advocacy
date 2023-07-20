@@ -1,4 +1,4 @@
-![Banner](images/adoptmor.png)
+![Banner](images/adoptmor.jpg)
 
 <center><h1>Animal Advocacy</center>
 
