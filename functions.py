@@ -175,11 +175,11 @@ def month_viz(train, target, title_name):
     
     #Add the average line for overall adoption percentage
     fig.add_hline(y=overall_adoption_percentage, line_dash='dash', line_color='blue')
-
     # Add the average line for overall transferred percentage
     fig.add_hline(y=overall_transfer_percentage, line_dash='dash', line_color='green')
     # Add the average line for overall other percentage
     fig.add_hline(y=overall_other_percentage, line_dash='dash', line_color='red')
+
     # Set x-axis title
     fig.update_xaxes(title_text="Month")
   # Update layout to set the title
@@ -194,6 +194,8 @@ def month_viz(train, target, title_name):
     # Capitalize words in the legend box titles
     fig.update_layout(legend_title_text='Outcome')
     fig.update_layout(title=title_name)  # Update layout to set the title
+    
+    fig.update_layout(plot_bgcolor = "rgba(0,0,0,0)", xaxis=dict(showgrid=False), yaxis=dict(showgrid=False))  # Update layout to set the title
     fig.show(renderer='png')
     
 
@@ -221,18 +223,12 @@ def px_viz(train, feature, target, ax_name, title_name):
                  labels={'percentage': 'Total Percentage (%)'})
 
     #Add the average line for overall adoption percentage
-    fig.add_hline(y=overall_adoption_percentage, line_dash='dash', line_color='blue',
-                  annotation_text=f'Avg. Adoption ({overall_adoption_percentage:.2f}%)',
-                  annotation_position='top left')
+    fig.add_hline(y=overall_adoption_percentage, line_dash='dash', line_color='blue')
 
     # Add the average line for overall transferred percentage
-    fig.add_hline(y=overall_transfer_percentage, line_dash='dash', line_color='green',
-                  annotation_text=f'Avg. Transferred ({overall_transfer_percentage:.2f}%)',
-                  annotation_position='top left')
+    fig.add_hline(y=overall_transfer_percentage, line_dash='dash', line_color='green')
     # Add the average line for overall other percentage
-    fig.add_hline(y=overall_other_percentage, line_dash='dash', line_color='red',
-                  annotation_text=f'Avg. Other ({overall_other_percentage:.2f}%)',
-                  annotation_position='top left')
+    fig.add_hline(y=overall_other_percentage, line_dash='dash', line_color='red')
     # Set x-axis title
     fig.update_xaxes(title_text=ax_name)
     fig.update_layout(title=title_name)  # Update layout to set the title
@@ -248,7 +244,7 @@ def px_viz(train, feature, target, ax_name, title_name):
     fig.update_layout(legend_title_text='Outcome')
 
 
-            
+    fig.update_layout(plot_bgcolor = "rgba(0,0,0,0)", xaxis=dict(showgrid=False), yaxis=dict(showgrid=False))  # Update layout to set the title
     fig.show(renderer='png')
 
 def px_num_viz(train, feature, target, title_name, ax_name=None, tick_labels=None):
@@ -272,19 +268,13 @@ def px_num_viz(train, feature, target, title_name, ax_name=None, tick_labels=Non
                  labels={'percentage': 'Total Percentage (%)'})
 
     #Add the average line for overall adoption percentage
-    fig.add_hline(y=overall_adoption_percentage, line_dash='dash', line_color='blue',
-                  annotation_text=f'Avg. Adoption ({overall_adoption_percentage:.2f}%)',
-                  annotation_position='top right')
+    fig.add_hline(y=overall_adoption_percentage, line_dash='dash', line_color='blue')
 
     # Add the average line for overall transferred percentage
-    fig.add_hline(y=overall_transfer_percentage, line_dash='dash', line_color='green',
-                  annotation_text=f'Avg. Transferred ({overall_transfer_percentage:.2f}%)',
-                  annotation_position='top right')
+    fig.add_hline(y=overall_transfer_percentage, line_dash='dash', line_color='green')
     
     # Add the average line for overall other percentage
-    fig.add_hline(y=overall_other_percentage, line_dash='dash', line_color='red',
-                  annotation_text=f'Avg. Other ({overall_other_percentage:.2f}%)',
-                  annotation_position='top right')
+    fig.add_hline(y=overall_other_percentage, line_dash='dash', line_color='red')
     # Set x-axis title
     fig.update_xaxes(title_text=ax_name)
     fig.update_layout(title=title_name)  # Update layout to set the title
@@ -308,7 +298,8 @@ def px_num_viz(train, feature, target, title_name, ax_name=None, tick_labels=Non
     # Capitalize words in the legend box titles
     fig.update_layout(legend_title_text='Outcome')
 
-    fig.show(renderer='png') 
+    fig.update_layout(plot_bgcolor = "rgba(0,0,0,0)", xaxis=dict(showgrid=False), yaxis=dict(showgrid=False))  # Update layout to set the title
+    fig.show(renderer='png')
                                ####################### Stats Functions ###################
 
 
