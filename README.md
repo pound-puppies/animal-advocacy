@@ -167,46 +167,26 @@
 
 ### Recommendations
 * Data governance recommendations:
-    - We found tens of thousands of rows with data that was missing and/or had nonsensical information
-        * Collect more information such as: 
-            - Incidents (e.g. biting, abuse hx) 
-            - Stated reason for return 
-            - Reasons for turn in by owners
-            - Vaccination status
-            - Who turned the animal in (e.g. citizen, law enforcement, organization)
-            - Microchipped
-     - Create a database for all animals that are ownded
-         * Allow for anyone in the city to register their animals with us whether they are being dropped off or not
-         * Collect data on those animals
-             * Demographic information
-             * Microchip
-             * Health conditions
+    * Collect more information
+        - Incidents (e.g. biting, abuse, etc.)
+        - Stated reason for return
+        - Vaccination status
+        - Who turned the animal in (e.g. citizen, city, organization)
+        - Microchipped
+    * Create shared database: 
+        - Common practice is no standard requirement of data fields
+        - Drop-down menus for each field would enhance consistency
+
+
  * Business recommendations:
-     - Organize special adoption events and campaigns during the months when dogs and cats are adopted less frequently.
-         * Focus on promoting the benefits of adopting during these months, highlighting the joy of having a new furry friend for the upcoming year.
-         * Put special emphasis on cats and dogs with single color coats
-    - Promotional/Marketing Materials:
-        * Highlight the unique qualities and/or advantages of owning:
-            - Mixed-breed animals
-             - Cats
-         * Educating the public about:
-             - Responsible pet ownership
-                 * The importance of spaying and neutering their pets
-                 * Leashes
-                 * Microchips
-                 * Collaring
-                 * Properly securing the animal on their property
-             - General benefits of owning a pet
-             - The adoption pipeline,
-                 * Positive stories
-                 * The potential for negative outcomes and stories
-                 * Emphasis on stray animals, cause and outcomes
-    - Identify any points of friction for the adoption process and smoothen the process, provide support and education along the lifecycle of the animal
-    - Partner with local business that would be willing to:
-        * Host social events for people who adopted animals from our shelter
-        * Allow us to use their store fronts
-        * Provide discounts for our customers for a certain period of time if they registered their animal
-        * provide discounts for collars, vaccines, microchips, and neutering/spaying for animals purchased, and registered with our shelter
+    * Organize special adoption events
+        - During the high adoptions months promote cats, mixed breeds
+    * Promotions/marketing materials
+        - Responsible pet ownership including spay/neuter, microchips, and collars 
+        - Adoption pipeline pamphlet to include positive stories, negative outcome statistics, and avoiding stray animal causes
+    * Partner with local business to:
+        - Host social events and store fronts
+        - Offer discounts for adoptions and merchandise
 
 
 <a name='next_steps'></a>
