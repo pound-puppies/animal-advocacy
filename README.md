@@ -1,5 +1,4 @@
-![Banner](scratch_folders/images/adoptmor.jpg)
-
+<a href="https://www.canva.com/design/DAFoRDeWg9E/rp6mlcQZuu4j1eH1xZl_wg/view?utm_content=DAFoRDeWg9E&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink">![Banner](scratch_folders/images/adoptmor.jpg)</a> 
 <center><h1>Animal Advocacy</center>
 
 ### 10 July 2023
@@ -9,17 +8,17 @@
 1. [Project Description with goals](#project_description_with_goals)
     1. [Project Description](#project_description)
     2. [Goals](#project_goals)
-    3. [Initial Thoughts](#initial_thoughts)
-    4. [Initial Hypothesis](#initial_hypothesis) 
+    3. [Initial Thoughts](#initial_hypothesis)
+    4. [Exploratory Questions](#Questions) 
 2. [Project Plan](#project_plan)
 3. [Prepare](#prepare)
 4. [Drawn Conclusions](#conclusions)
 5. [Data Dicitonary](#conclusions)
 6. [Steps to Reproduce](#steps)
-7. [Exploration Summary](#exploration)
 8. [Takeaways and Conclusions](#takeaways)
-9. [Recommendations](#recommendations)
-10. [Next Steps](#next_steps)
+    1. [Exploration Summary](#exploration)
+    2. [Recommendations](#recommendations)
+    3. [Next Steps](#next_steps)
    
 <hr style="border-top: 10px groove tan; margin-top: 5px; margin-bottom: 5px"></hr>
 
@@ -38,12 +37,12 @@
 * Provide data based solutions to reduce outcomes of "other"
 * Present our options to our stakeholders
 
-<a name='initial_thoughts'></a>
-### Initial Thoughts
+<a name='initial_hypothesis'></a>
+### Initial hypothesis
 * Our initial thought is that the drivers of outcome will be breed, age, condition, species, and sex.
 
-<a name='initial_hypothesis'></a>
-## Initial hypotheses and/or questions you have of the data, ideas
+<a name='Exploratory Questions'></a>
+## Questions you have of the data, ideas
 
 - What is the Percentage of Dogs and Cats?
 - Are Months Related to Dogs/Cats Adoptablility?
@@ -116,11 +115,6 @@
 
 <a name='conclusions'></a>
 ## Draw conclusions
-* June, July, August, and December had higher volumes
-* Mixed breeds are more likely to be transfered or adopted
-* Fixed animals are far more likely to be adopted
-* Cats are slightly more likely to have an ‘other’ or transfer outcome than dogs
-* Cats and dogs with normal conditions are more likely to be adopted.
 
 <a name='dictionary'></a>
 
@@ -149,49 +143,30 @@
 * 3. Download austin_animal_intakes.csv and austin_animal_outcomes.csv and put in cloned personal repository
 * 4. Run notebook.
 
-<a name='exploration'></a>
-## Exploration Summary
-- Identifed features that have a significant relationship with outcome:
-    * rel_month:
-        * Dogs are adopted more in December, January, February, and March and less in April, May, June, September, October, and November.
-        * Cats are adopted more in December, January, February, July, and August and less in March, April, May, June, September, and October.
-    * breeds: Mixed breeds are more likely to be transfered or adopted
-    * sex: Fixed animals are far more likely to be adopted
-    * species: Among dogs a higher percentage were adopted compared to cats
-    * intake_type:
-        * Cats and dogs that came in as abandoned, owner surrender, or public assist are more likely to be adopted.
-        * Cats and dogs that came in as stray are less likely to be adopted
-    * condition: Cats and dogs with normal conditions are more likely to be adopted.
-    * mix_color: Cats and dogs with single-colored coats are more likely to be transferred
-    * primary_color:
-        * Dog's with the primary color gray and red are more likely to be adopted
-        * Cat's with the primary color agouti, lynx point, and red are more likely to be adopted
-- Features that will not be continuing to modeling:
-    * Year_rel: Showed overall trend and would not be a accurate prediction
-    * Dob: Data integrity issued was raised when we found negative ages
-    * Outcome_age: Data integrity issued was raised when we found negative ages
-    * Is_tabby: No statisical significance
-
 <a name='takeaways'></a>
 ## Takeaways and Conclusions
-- Identifed features that have a significant relationship with outcome:
-    * June, July, August, and December had higher volumes
-    * Mixed breeds are more likely to be transfered or adopted
-    * Fixed animals are far more likely to be adopted
-    * Cats are slightly more likely to have an ‘other’ or transfer outcome than dogs
-    * Cats and dogs with normal conditions are more likely to be adopted.
-    
-- Month of outcome, Breed of species, Sex, Species, Condition, Mix_color, Month_Rel:
-    * Each feature had a statistically significant relaitonship with outcome
 
-** Year_rel: Showed overall trend and would not be a accurate prediction**
-** Outcome_age: Data integrity issued was raised when we found negative ages**
+<a name='exploration'></a>
+## Exploration Summary
+* Dogs are adopted more in December, January, February, and March and less in April, May, June, September, October, and November.
+* Cats are adopted more in December, January, February, July, and August and less in March, April, May, June, September, and October.
+* Mixed breeds are more likely to be transfered or adopted
+* Fixed animals are far more likely to be adopted
+* Cats are slightly more likely to have an ‘other’ or transfer outcome than dogs
+* Cats and dogs that came in as abandoned, owner surrender, or public assist are more likely to be adopted.
+* Cats and dogs that came in as stray are less likely to be adopted
+* Species with normal conditions are more likely to be adopted.
+* Species with single-colored coats are more likely to be transferred
+* Dog's with the primary color gray and red are more likely to be adopted
+* Cat's with the primary color agouti, lynx point, and red are more likely to be adopted
+* Year_rel: Showed overall trend and would not be a accurate prediction
+* Dob: Data integrity issued was raised when we found negative ages
+* Outcome_age: Data integrity issued was raised when we found negative ages
+* Is_tabby: No statisical significance
 
 <a name='recommendations'></a>
 
 ### Recommendations
-* During the high adoptions months promote cats, mixed breeds, more by reducing adoption costs, adding stories and character traits.
-
 * Data governance recommendations:
     - We found tens of thousands of rows with data that was missing and/or had nonsensical information
         * Collect more information such as: 
@@ -236,7 +211,6 @@
 
 
 <a name='next_steps'></a>
-
 ### Next Steps
 * If provided more time we would use NLP to review the polarity of the names. 
 * Review other shelters with different features
