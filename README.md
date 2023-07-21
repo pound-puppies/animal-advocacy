@@ -40,16 +40,21 @@
 
 <a name='initial_thoughts'></a>
 ### Initial Thoughts
-* Our initial hypothesis is that the drivers of outcome will be breed, age, condition, species, and sex.
+* Our initial thought is that the drivers of outcome will be breed, age, condition, species, and sex.
 
 <a name='initial_hypothesis'></a>
 ## Initial hypotheses and/or questions you have of the data, ideas
 
-- Is Month Related to Outcome?
+- What is the Percentage of Dogs and Cats?
+- Are Months Related to Dogs/Cats Adoptablility?
 - Is Breed Related to Outcome?
 - Is Sex Related to Outcome?
 - Is Species Related to Outcome?
 - Is Condition Related to Outcome
+- Is Intake Type Related to Outcome?
+- Is Multi-Color Coat Related to Outcome?
+- Are Tabby Pattern Coats Related to Outcome?
+- Is Primary Coat Color Related to Outcome?
 
 *****************************************
 
@@ -65,7 +70,6 @@
 * Each column represents features of the animal
 
 <a name='prepare'></a>
-
 ## Prepare
 * Two dataframes were created, model_df with encoded variables
 * Altered column names for readability, and convenience
@@ -140,7 +144,7 @@
 
 <a name='steps'></a>
 ## Steps to Reproduce
-* 1. Clone this repo: git@github.com:pound-puppies/animal-advocacy.git
+* 1. Clone this repo: https://github.com/pound-puppies/animal-advocacy
 * 2. Go to team [Google Drive link here:](https://drive.google.com/drive/folders/1hV0WQezLiQpS06MIc0Kggy8Iq0mdoTLh) 
 * 3. Download austin_animal_intakes.csv and austin_animal_outcomes.csv and put in cloned personal repository
 * 4. Run notebook.
