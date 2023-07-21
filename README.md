@@ -9,7 +9,7 @@
     1. [Project Description](#project_description)
     2. [Goals](#project_goals)
     3. [Initial Thoughts](#initial_hypothesis)
-    4. [Exploratory Questions](#Questions) 
+    4. [Exploratory Questions](#questions) 
 2. [Project Plan](#project_plan)
 3. [Prepare](#prepare)
 4. [Drawn Conclusions](#conclusions)
@@ -41,9 +41,8 @@
 ### Initial hypothesis
 * Our initial thought is that the drivers of outcome will be breed, age, condition, species, and sex.
 
-<a name='Exploratory Questions'></a>
-## Questions you have of the data, ideas
-
+<a name='questions'></a>
+## Exploratory Questions
 - What is the Percentage of Dogs and Cats?
 - Are Months Related to Dogs/Cats Adoptablility?
 - Is Breed Related to Outcome?
